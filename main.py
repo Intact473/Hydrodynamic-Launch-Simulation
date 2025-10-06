@@ -1,3 +1,5 @@
+import pandas
+
 def main():
     print("Hier kommen die Hauptfunktionen rein")
     
