@@ -1,0 +1,92 @@
+\documentclass[a4paper,12pt]{article} % Dokumenttyp: 'article' für kurze Arbeiten
+
+% ----- Pakete -----
+\usepackage[utf8]{inputenc}    % Zeichencodierung (Umlaute etc.)
+\usepackage[T1]{fontenc}       % Verbesserte Zeichendarstellung
+\usepackage[ngerman]{babel}    % Deutsche Spracheinstellungen
+\usepackage{amsmath, amssymb}  % Mathematische Symbole und Umgebungen
+\usepackage{graphicx}          % Zum Einbinden von Bildern
+\usepackage{geometry}          % Seitenränder anpassen
+\usepackage{hyperref}          % Klickbare Links und PDF-Metadaten
+\usepackage{enumitem}          % Bessere Kontrolle über Aufzählungen
+\usepackage{booktabs}          % Schönere Tabellen
+\usepackage{xcolor}            % Farben für Text, Tabellen etc.
+
+% ----- Layout -----
+\geometry{a4paper, margin=2.5cm}  % Seitenränder
+
+% ----- PDF-Metadaten -----
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    urlcolor=teal,
+    pdftitle={Titel deines Dokuments},
+    pdfauthor={Dein Name},
+}
+
+% ----- Titel -----
+\title{Titel deines Dokuments}
+\author{Patrick Musterstudent}
+\date{\today}
+
+% ==========================
+\begin{document}
+% ==========================
+
+\maketitle % Titel ausgeben
+
+\tableofcontents % Inhaltsverzeichnis (optional)
+\newpage
+
+\section{Einleitung}
+Hier beginnt dein Text. Du kannst normale Absätze einfach durch eine Leerzeile trennen.
+
+\section{Mathematische Umgebung}
+Ein Beispiel für eine Gleichung:
+\begin{equation}
+E = mc^2
+\end{equation}
+
+Oder inline wie \( a^2 + b^2 = c^2 \).
+
+\section{Aufzählungen}
+\begin{itemize}
+    \item Punkt 1
+    \item Punkt 2
+\end{itemize}
+
+Oder nummeriert:
+\begin{enumerate}
+    \item Erster Punkt
+    \item Zweiter Punkt
+\end{enumerate}
+
+\section{Bilder}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.5\textwidth]{beispielbild.png}
+    \caption{Ein Beispielbild.}
+    \label{fig:beispiel}
+\end{figure}
+
+\section{Tabellen}
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{l c r}
+        \toprule
+        Links & Mitte & Rechts \\
+        \midrule
+        A & B & C \\
+        D & E & F \\
+        \bottomrule
+    \end{tabular}
+    \caption{Beispieltabelle}
+    \label{tab:beispiel}
+\end{table}
+
+\section{Fazit}
+Hier schließt du dein Dokument ab.
+
+% ==========================
+\end{document}
+% ==========================
