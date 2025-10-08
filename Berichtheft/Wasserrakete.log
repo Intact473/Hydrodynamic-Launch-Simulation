@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.10.8)  8 OCT 2025 15:31
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.10.8)  8 OCT 2025 15:42
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -310,8 +310,7 @@ Package hyperref Info: Option `colorlinks' set `true' on input line 25.
 File: l3backend-pdftex.def 2024-05-08 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count305
 \l__pdf_internal_box=\box55
-)
-No file Wasserrakete.aux.
+) (./Wasserrakete.aux)
 \openout1 = `Wasserrakete.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 33.
@@ -332,7 +331,7 @@ LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 33.
 LaTeX Font Info:    ... okay on input line 33.
 LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 33.
 LaTeX Font Info:    ... okay on input line 33.
-(/usr/local/texlive/2025/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+ (/usr/local/texlive/2025/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count306
 \scratchdimen=\dimen180
@@ -447,10 +446,10 @@ Package rerunfilecheck Info: Checksums for `Wasserrakete.out':
 (rerunfilecheck)             After:  F7BF78B6678DA6B7FBF311AEBEB17674;579.
  ) 
 Here is how much of TeX's memory you used:
- 12426 strings out of 473190
- 191908 string characters out of 5715800
- 609848 words of memory out of 5000000
- 35511 multiletter control sequences out of 15000+600000
+ 12429 strings out of 473190
+ 191971 string characters out of 5715800
+ 609839 words of memory out of 5000000
+ 35512 multiletter control sequences out of 15000+600000
  570580 words of font info for 72 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  75i,8n,79p,369b,460s stack positions out of 10000i,1000n,20000p,200000b,200000s
