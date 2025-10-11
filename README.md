@@ -4,6 +4,7 @@
 python3 -m venv venv
 # Virtuelle Umgebung starten
 . venv/bin/activate 
+oder source .venv/bin/activate
 
 # Bibilotheken Installieren
 pip install -r requirements.txt
