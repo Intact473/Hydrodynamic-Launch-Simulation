@@ -53,10 +53,11 @@ class ControlPanel:
             cursor_y += input_h + gap
             return entry
 
-        self.inp_volumePET = add_labeled_entry("Volume PET [l]", "1.00")
-        self.inp_pressure = add_labeled_entry("Pressure [bar]", "6.00")
-        self.inp_weight_empty_rocket = add_labeled_entry("Weight empty rocket [kg]", "0.60")
-        self.inp_start_angle = add_labeled_entry("Start angle [°]", "90.0")
+        self.uinp_volumePET = add_labeled_entry("Volume PET [l]", "1.00")
+        self.uinp_pressure = add_labeled_entry("Pressure [bar]", "6.00")
+        self.uinp_weight_empty_rocket = add_labeled_entry("Weight empty rocket [kg]", "0.60")
+        self.uinp_start_angle = add_labeled_entry("Start angle [°]", "90.0")
+        self.uinp_thrust_nozzle_diameter = add_labeled_entry("Thrust nozzle diameter [mm]", "10.0")
 
 
         self.btn_start = gui.elements.UIButton(
@@ -84,12 +85,14 @@ class ControlPanel:
                     self.on_reset()
 
     def read_values(self) -> dict:
-        inp_values = {}
+        uinp_values = {}
         try:
-            inp_values["volume"] = float(self.inp_volumePET.get_text())
-            inp_values["pressure"] = float(self.inp_pressure.get_text())
-            inp_values["empty_rocket_weight"] = float(self.inp_weight_empty_rocket.get_text())
-            inp_values["start_angle"] = float(self.inp_start_angle.get_text())
+            uinp_values["volume"] = float(self.uinp_volumePET.get_text())
+            uinp_values["pressure"] = float(self.uinp_pressure.get_text())
+            uinp_values["empty_rocket_weight"] = float(self.uinp_weight_empty_rocket.get_text())
+            uinp_values["start_angle"] = float(self.uinp_start_angle.get_text())
+            uinp_values["start_angle"] = float(self.uinp_start_angle.get_text())
+            uinp_values["thrust nozzle diameter"] = float(self.uinp_thrust_nozzle_diameter.get_text()) 
         except ValueError as e:
-            print("Error: Invalid input in control panel", e)
-        return inp_values
+            print("Error: Invalid uinput in control panel", e)
+        return uinp_values
