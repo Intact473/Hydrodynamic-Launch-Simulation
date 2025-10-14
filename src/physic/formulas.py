@@ -1,7 +1,7 @@
 import math
-from view import gui
 
 gui_input_values = {}
+max_value = 0.0
 
 def set_values(values: dict):
     """
@@ -25,3 +25,14 @@ def calculate_thrust_nozzel_area(diameter_mm: float) -> float:
     radius_m = (diameter_mm / 1000) / 2
     nozzel_area = math.pi * (radius_m ** 2)
     return nozzel_area 
+
+def calculate_max_value(value) -> float:
+    """
+    Calculate the maximum value for the prameter.
+    Paramters:
+        value: the current value, this could be height, velocity for example
+    """
+    global max_value
+    max_value = max(max_value, value)
+
+    return max_value
