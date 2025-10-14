@@ -1,20 +1,22 @@
 import math
+from view import gui
 
-def getValuesFromControlPanel(values: dict):
-    """
-    Extract and convert values from the control panel input dictionary.
-    volume: in liters
-    pressure: in bar
-    empty_rocket_weight: in kg
-    start_angle: in degrees
-    thrust_nozzle_diameter: in mm
-    """
-    volume = values["volume"]
-    pressure = values["pressure"]
-    empty_rocket_weight = values["empty_rocket_weight"]
-    start_angle = values["start_angle"]
-    thrust_nozzle_diameter = values["thrust_nozzle_diameter"]
+gui_input_values = {}
 
+def set_values(values: dict):
+    """
+    get all gui inputs
+    Parameters:
+        volume: in liters
+        pressure: in bar
+        empty_rocket_weight: in kg
+        start_angle: in degrees
+        thrust_nozzle_diameter: in mm
+    """
+
+    print(values)
+    global gui_input_values
+    gui_input_values = values.copy()
 
 def calculate_thrust_nozzel_area(diameter_mm: float) -> float:
     """

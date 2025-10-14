@@ -16,6 +16,7 @@ clock = pg.time.Clock()
 
 
 def run_window(start=None, stop=None):
+    """Run the main application window with a control panel and a simulation area."""
     running = True
     manager = gui.UIManager((WINDOW_W, WINDOW_H))
     panel = ControlPanel(gui_window, manager, on_start=start, on_reset=stop)
