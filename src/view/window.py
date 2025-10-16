@@ -3,6 +3,7 @@ sys.dont_write_bytecode = True
 import pygame as pg
 import pygame_gui as gui
 from view.gui import ControlPanel
+from simulation.simulation import Simulation
 
 pg.init()
 
@@ -19,6 +20,7 @@ def run_window(start=None, stop=None):
     """Run the main application window with a control panel and a simulation area."""
     running = True
     manager = gui.UIManager((WINDOW_W, WINDOW_H))
+    sim = Simulation(simulation_window)
     panel = ControlPanel(gui_window, manager, on_start=start, on_reset=stop)
 
     while running:
@@ -35,12 +37,13 @@ def run_window(start=None, stop=None):
                     panel.handle_event(event)
 
         manager.update(dt)
+        sim.update(dt)
 
         screen.fill((255, 255, 255))
         pg.draw.rect(screen, (0, 0, 0), gui_window)
-        pg.draw.rect(screen, (0, 255, 0), simulation_window)
         pg.draw.line(screen, (200, 200, 200),gui_window.topright, gui_window.bottomright, 2)
 
+        sim.draw(screen)
         manager.draw_ui(screen)
         pg.display.flip()
 
