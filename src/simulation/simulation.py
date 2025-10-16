@@ -14,6 +14,9 @@ class Simulation:
             start_pos_rocket=Vec2(3.2, 1.6)
         )
         self.place_rocket_bottom_center(margin_px=16)
+        
+        self.bg_image = pg.image.load("Simtools-Projekt/img/ohm.jpg").convert()
+        self.bg_image = pg.transform.scale(self.bg_image, (self.rect.width, self.rect.height))
 
     def place_rocket_bottom_center(self, margin_px):
         pixel_to_meter = self.pixel_to_meter
@@ -36,10 +39,10 @@ class Simulation:
         pass
 
     def draw(self, screen: pg.Surface):
-        draw_pos_rocket = screen.subsurface(self.rect)
-        draw_pos_rocket.fill((242, 244, 248))
-        for x in range(0, self.rect.width, 40):
-            pg.draw.line(draw_pos_rocket, (225, 230, 236), (x, 0), (x, self.rect.height), 1)
-        for y in range(0, self.rect.height, 40):
-            pg.draw.line(draw_pos_rocket, (225, 230, 236), (0, y), (self.rect.width, y), 1)
-        self.rocket.draw(draw_pos_rocket, meters_to_px=self.pixel_to_meter, outline=True)
+        sim_surface = screen.subsurface(self.rect)
+        sim_surface.blit(self.bg_image, (0, 0))
+        # for x in range(0, self.rect.width, 40):
+        #     pg.draw.line(sim_surface, (225, 230, 236), (x, 0), (x, self.rect.height), 1)
+        # for y in range(0, self.rect.height, 40):
+        #     pg.draw.line(sim_surface, (225, 230, 236), (0, y), (self.rect.width, y), 1)
+        self.rocket.draw(sim_surface, meters_to_px=self.pixel_to_meter, outline=True)
