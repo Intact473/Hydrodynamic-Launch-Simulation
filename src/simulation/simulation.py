@@ -15,8 +15,13 @@ class Simulation:
         )
         self.place_rocket_bottom_center(margin_px=16)
         
+        self.use_image_bg = True
         self.bg_image = pg.image.load("Simtools-Projekt/img/ohm.jpg").convert()
         self.bg_image = pg.transform.scale(self.bg_image, (self.rect.width, self.rect.height))
+        self.use_image_bg = True
+
+    def toggle_mode(self):
+        self.use_image_bg = not self.use_image_bg
 
     def place_rocket_bottom_center(self, margin_px):
         pixel_to_meter = self.pixel_to_meter
@@ -41,8 +46,12 @@ class Simulation:
     def draw(self, screen: pg.Surface):
         sim_surface = screen.subsurface(self.rect)
         sim_surface.blit(self.bg_image, (0, 0))
-        # for x in range(0, self.rect.width, 40):
-        #     pg.draw.line(sim_surface, (225, 230, 236), (x, 0), (x, self.rect.height), 1)
-        # for y in range(0, self.rect.height, 40):
-        #     pg.draw.line(sim_surface, (225, 230, 236), (0, y), (self.rect.width, y), 1)
+        if not self.use_image_bg:
+            sim_surface.blit(self.bg_image, (0, 0))
+        else:
+            sim_surface.fill((0, 0, 0))
+            for x in range(0, self.rect.width, 40):
+                pg.draw.line(sim_surface, (225, 230, 236), (x, 0), (x, self.rect.height), 1)
+            for y in range(0, self.rect.height, 40):
+                pg.draw.line(sim_surface, (225, 230, 236), (0, y), (self.rect.width, y), 1)
         self.rocket.draw(sim_surface, meters_to_px=self.pixel_to_meter, outline=True)

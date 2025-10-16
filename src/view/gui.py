@@ -6,11 +6,12 @@ from physic import formulas
 
 
 class ControlPanel:
-    def __init__(self, gui_rect: pg.Rect, manager: gui.UIManager, on_start=None, on_reset=None):
+    def __init__(self, gui_rect: pg.Rect, manager: gui.UIManager, on_start=None, on_reset=None, toggle_mode=None):
         self.gui_rect = gui_rect
         self.manager = manager
         self.on_start = on_start
         self.on_reset = on_reset
+        self.on_toggle_mode = toggle_mode
 
         x, y, w, h = gui_rect
         pad = 10
@@ -75,6 +76,14 @@ class ControlPanel:
             container=self.panel,
             manager=manager
         )
+        cursor_y += 34 + 8
+
+        self.btn_toggle_mode = gui.elements.UIButton(
+            relative_rect=pg.Rect(pad, cursor_y, w - 2*pad, 40),
+            text="Georg Ohm Space Center",
+            container=self.panel,
+            manager=manager
+        )
 
     def handle_event(self, event):
         """Handle button press events."""
@@ -82,9 +91,9 @@ class ControlPanel:
             values = self.read_values()
             if values is not None:
                 formulas.set_values(values)
+        elif event.ui_element == self.btn_toggle_mode and self.on_toggle_mode:
+            self.on_toggle_mode()
             
-
-
     def read_values(self) -> dict:
         """
         Read and return the current values from the input fields as a dictionary.

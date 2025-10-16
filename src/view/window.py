@@ -21,7 +21,7 @@ def run_window(start=None, stop=None):
     running = True
     manager = gui.UIManager((WINDOW_W, WINDOW_H))
     sim = Simulation(simulation_window)
-    panel = ControlPanel(gui_window, manager, on_start=start, on_reset=stop)
+    panel = ControlPanel(gui_window, manager, on_start=start, on_reset=stop,toggle_mode=sim.toggle_mode)
 
     while running:
         # Handle events
