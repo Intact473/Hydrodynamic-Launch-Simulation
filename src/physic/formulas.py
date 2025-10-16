@@ -1,7 +1,5 @@
 import math
 
-import math
-
 gui_input_values = {}
 max_value = 0.0
 
