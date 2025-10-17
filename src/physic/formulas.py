@@ -34,7 +34,7 @@ def calculate_thrust_nozzel_area(diameter_mm: float) -> float:
     nozzel_area = math.pi * (radius_m ** 2)
     return nozzel_area 
 
-def calculate_max_value(value) -> float:
+def get_max_value(value) -> float:
     """
     Calculate the maximum value for the prameter.
     Paramters:
