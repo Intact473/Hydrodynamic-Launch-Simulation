@@ -91,6 +91,8 @@ class ControlPanel:
             values = self.read_values()
             if values is not None:
                 self.on_start(values)
+        elif event.ui_element == self.btn_reset and self.on_reset:
+            self.on_reset()
         elif event.ui_element == self.btn_toggle_mode and self.on_toggle_mode:
             self.on_toggle_mode()
             
