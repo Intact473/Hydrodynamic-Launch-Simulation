@@ -1,7 +1,22 @@
 import math
 
 gui_input_values = {}
+global time
+time = 0
 max_value = 0.0
+
+def start(values:dict):
+    global running
+    running = True
+    print("Simulation started")
+    set_values(values)
+
+def stop():
+    global running
+    running = False
+    print("Simulation stopped")
+    global time
+    time = 0
 
 def set_values(values: dict):
     """
@@ -16,7 +31,9 @@ def set_values(values: dict):
 
     print(values)
     global gui_input_values
+    global time              # <-- Neu: sorgt dafür, dass die Zuweisung time = 0 die Modul-Variable ändert
     gui_input_values = values.copy()
+    time = 0
 
 def calculate_thrust_nozzel_area(diameter_mm: float) -> float:
     """
@@ -51,3 +68,9 @@ def mass_flow(density_water, ejection_velocity, nozzle_area):
 
 def thrust(mass_flow, ejection_velocity):
     return mass_flow * ejection_velocity
+
+
+def calculateValues():
+    if time == 0:
+        pressure = gui_input_values.get("pressure")
+        print(pressure)
