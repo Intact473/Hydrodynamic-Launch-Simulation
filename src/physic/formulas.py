@@ -1,9 +1,10 @@
 import math
 
-gui_input_values = {} # Also stores the previous values to reuse in the next calculations
-global time
+gui_input_values = {}
 time = 0
 max_value = 0.0
+previous_values = {}
+running = False
 
 def start(values:dict):
     global running
@@ -31,7 +32,8 @@ def set_values(values: dict):
 
     print(values)
     global gui_input_values
-    global time              # <-- Neu: sorgt dafür, dass die Zuweisung time = 0 die Modul-Variable ändert
+    global time
+
     gui_input_values = values.copy()
     time = 0
 
@@ -69,10 +71,10 @@ def mass_flow(density_water, ejection_velocity, nozzle_area):
 def thrust(mass_flow, ejection_velocity):
     return mass_flow * ejection_velocity
 
-
 def calculateValues():
-    print("Calculating values for time: ", round(time, 4))
+    global running
+    if not running: return
+    # print("Calculating values for time: ", round(time, 4))
     global gui_input_values
-    print(gui_input_values.values)
     if time == 0:
         pass
