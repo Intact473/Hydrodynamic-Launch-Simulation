@@ -4,6 +4,7 @@ import pygame as pg
 import pygame_gui as gui
 from view.gui import ControlPanel
 from simulation.simulation import Simulation
+import physic.formulas as formulas
 
 pg.init()
 
@@ -22,10 +23,17 @@ def run_window(start=None, stop=None):
     manager = gui.UIManager((WINDOW_W, WINDOW_H))
     sim = Simulation(simulation_window)
     panel = ControlPanel(gui_window, manager, on_start=start, on_reset=stop,toggle_mode=sim.toggle_mode)
+    
+    
 
     while running:
         # Handle events
-        dt = clock.tick(60) / 1000.0
+        dt = clock.tick(60) # Framerate of 60 fps
+        formulas.time+=dt/1000
+
+        formulas.calculateValues()
+
+        print(formulas.time)
 
         for event in pg.event.get():
             if event.type == pg.QUIT:
