@@ -29,6 +29,9 @@ def run_window(start=None, stop=None):
     while running:
         # Handle events
         dt = clock.tick(60) # Framerate of 60 fps
+        
+        # TODO: fix on_start not calling start function but instead using set_values
+        
         formulas.time+=dt/1000
 
         formulas.calculateValues()
