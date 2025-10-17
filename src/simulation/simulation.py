@@ -16,7 +16,7 @@ class Simulation:
         self.place_rocket_bottom_center(margin_px=16)
         
         self.use_image_bg = True
-        self.bg_image = pg.image.load("Simtools-Projekt/img/ohm.jpg").convert()
+        self.bg_image = pg.image.load("img/ohm.jpg").convert()
         self.bg_image = pg.transform.scale(self.bg_image, (self.rect.width, self.rect.height))
         self.use_image_bg = True
 
