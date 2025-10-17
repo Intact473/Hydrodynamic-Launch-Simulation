@@ -1,6 +1,6 @@
 import math
 
-gui_input_values = {}
+gui_input_values = {} # Also stores the previous values to reuse in the next calculations
 global time
 time = 0
 max_value = 0.0
@@ -71,6 +71,8 @@ def thrust(mass_flow, ejection_velocity):
 
 
 def calculateValues():
+    print("Calculating values for time: ", round(time, 4))
+    global gui_input_values
+    print(gui_input_values.values)
     if time == 0:
-        pressure = gui_input_values.get("pressure")
-        print(pressure)
+        pass

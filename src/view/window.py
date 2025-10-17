@@ -28,15 +28,12 @@ def run_window(start=None, stop=None):
 
     while running:
         # Handle events
-        dt = clock.tick(60) # Framerate of 60 fps
+        dt = clock.tick(1000) # sets framerate (fps)
         
-        # TODO: fix on_start not calling start function but instead using set_values
-        
-        formulas.time+=dt/1000
-
         formulas.calculateValues()
+        formulas.time+=dt/1000 # to get time in seconds
 
-        print(formulas.time)
+        # print(formulas.time)
 
         for event in pg.event.get():
             if event.type == pg.QUIT:
