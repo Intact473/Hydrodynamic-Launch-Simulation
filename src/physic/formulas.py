@@ -1,23 +1,15 @@
 import math
 
 gui_input_values = {}
-time = 0
 max_value = 0.0
 previous_values = {}
-running = False
 
 def start(values:dict):
-    global running
-    running = True
     print("Simulation started")
     set_values(values)
 
 def stop():
-    global running
-    running = False
     print("Simulation stopped")
-    global time
-    time = 0
 
 def set_values(values: dict):
     """
@@ -32,10 +24,7 @@ def set_values(values: dict):
 
     print(values)
     global gui_input_values
-    global time
-
     gui_input_values = values.copy()
-    time = 0
 
 def calculate_thrust_nozzel_area(diameter_mm: float) -> float:
     """
@@ -72,9 +61,5 @@ def thrust(mass_flow, ejection_velocity):
     return mass_flow * ejection_velocity
 
 def calculateValues():
-    global running
-    if not running: return
     # print("Calculating values for time: ", round(time, 4))
     global gui_input_values
-    if time == 0:
-        pass
