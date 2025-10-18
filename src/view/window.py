@@ -5,6 +5,7 @@ import pygame_gui as gui
 from view.gui import ControlPanel
 from simulation.simulation import Simulation
 import physic.formulas as formulas
+Vec2 = pg.math.Vector2
 
 pg.init()
 
@@ -22,26 +23,31 @@ def run_window(start=None, stop=None):
     running = True
     manager = gui.UIManager((WINDOW_W, WINDOW_H))
     sim = Simulation(simulation_window)
+    sim.place_rocket_bottom_center(margin_px=10)
+    sim.camera_center = Vec2(sim.rocket.pos) - Vec2(0, 2.0)     
 
     def handle_start(values):
+        sim.pixel_to_meter = 100.0
+        sim.start_pos_y = sim.rocket.pos.y
         sim.rocket_is_flying = True
         if start:
             start(values)
 
     def handle_reset():
         sim.rocket_is_flying = False
+        sim.pixel_to_meter = 100.0
         sim.place_rocket_bottom_center(margin_px=10)
+        sim.start_pos_y = sim.rocket.pos.y
+        sim.camera_center = Vec2(sim.rocket.pos) - Vec2(0, 2.0)
         if stop:
             stop()
 
     panel = ControlPanel(gui_window, manager, on_start=handle_start, on_reset=handle_reset, toggle_mode=sim.toggle_mode)
     
-    
-
     formulas.calculateValues()
     while running:
         # Handle events
-        dt = clock.tick(60) # sets framerate (fps)
+        dt = clock.tick(60)/1000.0 # sets framerate (fps)
         
         for event in pg.event.get():
             if event.type == pg.QUIT:
