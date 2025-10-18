@@ -2,6 +2,7 @@ import pygame as pg
 import math
 from pygame.math import Vector2 as Vec2
 from simulation.rocket import Rocket
+import physic.formulas as formulas
 
 class Simulation:
     def __init__(self, sim_rect: pg.Rect):
@@ -19,6 +20,7 @@ class Simulation:
         self.bg_image = pg.image.load("img/ohm.jpg").convert()
         self.bg_image = pg.transform.scale(self.bg_image, (self.rect.width, self.rect.height))
         self.use_image_bg = True
+        self.rocket_is_flying = False
 
     def toggle_mode(self):
         self.use_image_bg = not self.use_image_bg
@@ -40,8 +42,10 @@ class Simulation:
         self.rocket.pos = Vec2(pos_x_m, pos_y_m)
 
     def update(self, dt: float):
-        #ToDo: Update rocket position
-        pass
+        if self.rocket_is_flying:
+            velocity = -0.001 #test
+            # TODO: updated velocity from fromulas
+            self.rocket.pos.y += velocity * dt
 
     def draw(self, screen: pg.Surface):
         sim_surface = screen.subsurface(self.rect)

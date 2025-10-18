@@ -22,7 +22,19 @@ def run_window(start=None, stop=None):
     running = True
     manager = gui.UIManager((WINDOW_W, WINDOW_H))
     sim = Simulation(simulation_window)
-    panel = ControlPanel(gui_window, manager, on_start=start, on_reset=stop,toggle_mode=sim.toggle_mode)
+
+    def handle_start(values):
+        sim.rocket_is_flying = True
+        if start:
+            start(values)
+
+    def handle_reset():
+        sim.rocket_is_flying = False
+        sim.place_rocket_bottom_center(margin_px=16)
+        if stop:
+            stop()
+
+    panel = ControlPanel(gui_window, manager, on_start=handle_start, on_reset=handle_reset, toggle_mode=sim.toggle_mode)
     
     
 
