@@ -14,7 +14,7 @@ class Simulation:
             angle_deg=90.0,
             start_pos_rocket=Vec2(3.2, 1.6)
         )
-        self.place_rocket_bottom_center(margin_px=16)
+        self.place_rocket_bottom_center(margin_px=10)
         
         self.use_image_bg = True
         self.bg_image = pg.image.load("img/ohm.jpg").convert()

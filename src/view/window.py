@@ -30,7 +30,7 @@ def run_window(start=None, stop=None):
 
     def handle_reset():
         sim.rocket_is_flying = False
-        sim.place_rocket_bottom_center(margin_px=16)
+        sim.place_rocket_bottom_center(margin_px=10)
         if stop:
             stop()
 
