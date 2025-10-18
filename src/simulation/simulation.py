@@ -47,6 +47,9 @@ class Simulation:
             # TODO: updated velocity from fromulas
             self.rocket.pos.y += velocity * dt
 
+    def camera_follows_rocket(self):
+        pass
+
     def draw(self, screen: pg.Surface):
         sim_surface = screen.subsurface(self.rect)
         sim_surface.blit(self.bg_image, (0, 0))
