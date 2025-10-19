@@ -69,7 +69,7 @@ def Thrust(mass_flow, ejection_velocity):
     return mass_flow * ejection_velocity
 
 def Air_Resistance(diameter_rocket, velocity):
-    # assuming circular cross-section
+    # assuming rocket is a cylinder
     C_w = 1  # drag coefficient
     rho_air = 1.225  # kg/m^3
     radius_rocket = diameter_rocket / 2
@@ -114,7 +114,7 @@ def calculateValues(plotValues = False):
         "kappa_gas": 1.4,
         "density_water": 997.0,       # kg/m^3
         "P_atm": 101325.0,             # Pa
-        "diameter_rocket": 0.10,      # cm 
+        "diameter_rocket": 0.10,      # m 
         "endTime": 5.0                 # seconds
     }
 
@@ -127,7 +127,6 @@ def calculateValues(plotValues = False):
     inputs["pressure"] *= 1e5  # atm to Pa
     inputs["water level rocket"] *= 1e-3  # liters to m^3
     inputs["volume"] *= 1e-3  # liters to m^3 
-    inputs["diameter_rocket"] *= 1e-2  # cm to m
     print(inputs)
 
     results = []
