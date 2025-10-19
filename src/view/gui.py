@@ -63,6 +63,7 @@ class ControlPanel:
         self.uinp_weight_empty_rocket = add_labeled_entry("Weight empty rocket [kg]", "0.60")
         self.uinp_thrust_nozzle_diameter = add_labeled_entry("Thrust nozzle d [mm]", "10.0")
         self.uinp_water_level_rocket = add_labeled_entry("Water level rocket [l]", "0.50")
+        self.uinp_cross_sectional_rocket = add_labeled_entry("Cross sectional rocket [m^2]", "1.00")
 
 
         self.btn_start = gui.elements.UIButton(
@@ -116,6 +117,7 @@ class ControlPanel:
             uinp_values["empty_rocket_weight"] = float(self.uinp_weight_empty_rocket.get_text())
             uinp_values["thrust nozzle diameter"] = float(self.uinp_thrust_nozzle_diameter.get_text())
             uinp_values["water level rocket"] = float(self.uinp_water_level_rocket.get_text())
+            uinp_values["cross sectional rocket"] = float(self.uinp_cross_sectional_rocket.get_text())
         except ValueError as e:
             print("Error: Invalid uinput in control panel", e)
         return uinp_values
