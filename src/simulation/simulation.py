@@ -59,13 +59,13 @@ class Simulation:
                 posY = 0
                 self.rocket_is_flying = False
                 print("Simulation ended")
-            else: 
-                posY = self.results[int(self.time)]['posY']
+            # else: 
+                # posY = self.results[int(self.time)]['posY']
                 
             
             
-            self.rocket.pos.y = posY
-            print(self.start_pos_y)
+            self.rocket.pos.y = posY + self.start_pos_y
+            # print(self.start_pos_y)
             print("posY: ", self.rocket.pos.y, " at time: ", self.time)
 
             target = self.rocket.pos - Vec2(0, 1.5)

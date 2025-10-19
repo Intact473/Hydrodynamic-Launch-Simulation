@@ -35,6 +35,7 @@ def run_window(start=None, stop=None):
     def handle_start(values):
         sim.pixel_to_meter = 100.0
         sim.start_pos_y = sim.rocket.pos.y
+        print("start pos: ", sim.start_pos_y)
         sim.rocket_is_flying = True
         if start:
             start(values)
