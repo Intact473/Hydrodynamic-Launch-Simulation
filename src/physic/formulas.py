@@ -1,18 +1,24 @@
 import math
 import matplotlib.pyplot as plt
+import view.window as vw
+
 
 gui_input_values = {}
 max_value = 0.0
+global results
+results = []
 
 def start(values:dict):
     print("Simulation started")
     set_values(values)
     global results
     results = calculateValues(plotValues = False)
+    vw.get_sim().time = 0.0
 
 
 def stop():
     print("Simulation stopped")
+    vw.get_sim().time = 0.0
 
 def set_values(values: dict):
     """
@@ -150,6 +156,10 @@ def calculateValues(plotValues = False):
         time = step * dt
         # get last values
         last = results[-1]  
+
+        if last["posY"] <= 0.0 and step > 4:
+            # Rocket has landed, stop simulation
+            break
         
         if last["water_level"] <= 0.0:
             # No water left, thrust is zero
@@ -164,7 +174,7 @@ def calculateValues(plotValues = False):
                 "gravity_force": (gravity_force := Gravity_force(total_mass := inputs["empty_rocket_weight"])) ,
                 "total_force": (total_force := - air_resistance - gravity_force),   # no more thrust
                 "velocity": last["velocity"] + (total_force / total_mass) * dt,
-                "posY": last["posY"] + last["velocity"] * dt,
+                "posY": max(0.0, last["posY"] + last["velocity"] * dt),
                 "water_level": 0.0,
                 "total_mass": total_mass,
             })
@@ -182,10 +192,11 @@ def calculateValues(plotValues = False):
                 "gravity_force": (Gravity_force(total_mass := inputs["empty_rocket_weight"] + inputs["density_water"] * (water_level := max(0.0, last["water_level"] - (mass_flow_rate / inputs["density_water"]) * dt)))) ,
                 "total_force": (total_force :=thrust_value - air_resistance - Gravity_force(total_mass)),
                 "velocity": last["velocity"] + (total_force / total_mass) * dt,
-                "posY": last["posY"] + last["velocity"] * dt,
+                "posY": max(0.0, last["posY"] + last["velocity"] * dt),
                 "water_level": water_level,
                 "total_mass": total_mass,
             })
+        
 
 
     # ---- plotting: separate plot for each variable ----

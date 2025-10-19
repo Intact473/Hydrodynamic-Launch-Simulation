@@ -5,6 +5,7 @@ import pygame_gui as gui
 from view.gui import ControlPanel
 from simulation.simulation import Simulation
 import physic.formulas as formulas
+Vec2 = pg.math.Vector2
 
 pg.init()
 
@@ -16,20 +17,45 @@ gui_window = pg.Rect(0, 0, PANEL_W, WINDOW_H)
 simulation_window = pg.Rect(PANEL_W, 0, WINDOW_W - PANEL_W, WINDOW_H)
 clock = pg.time.Clock()
 
+# expose module-level sim so other modules can import view.window.sim
+sim = Simulation(simulation_window)
+
+def get_sim():
+    """Return the Simulation instance (or None if not created yet)."""
+    return sim
 
 def run_window(start=None, stop=None):
     """Run the main application window with a control panel and a simulation area."""
     running = True
     manager = gui.UIManager((WINDOW_W, WINDOW_H))
-    sim = Simulation(simulation_window)
-    panel = ControlPanel(gui_window, manager, on_start=start, on_reset=stop,toggle_mode=sim.toggle_mode)
     
-    
+    sim.place_rocket_bottom_center(margin_px=10)
+    sim.camera_center = Vec2(sim.rocket.pos) - Vec2(0, 2.0)     
 
+    def handle_start(values):
+        sim.pixel_to_meter = 100.0
+        sim.start_pos_y = sim.rocket.pos.y
+        sim.rocket_is_flying = True
+        if start:
+            start(values)
+
+    def handle_reset():
+        sim.rocket_is_flying = False
+        sim.pixel_to_meter = 100.0
+        sim.place_rocket_bottom_center(margin_px=10)
+        sim.start_pos_y = sim.rocket.pos.y
+        sim.camera_center = Vec2(sim.rocket.pos) - Vec2(0, 2.0)
+        if stop:
+            stop()
+
+    panel = ControlPanel(gui_window, manager, on_start=handle_start, on_reset=handle_reset, toggle_mode=sim.toggle_mode)
     while running:
         # Handle events
-        dt = clock.tick(60) # sets framerate (fps)
-        
+        dt = clock.tick(60)  # sets framerate (fps)
+        dt_ms = dt
+
+        dt /= 1000.0  # convert to seconds
+
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 running = False
@@ -39,8 +65,12 @@ def run_window(start=None, stop=None):
                 if event.user_type == gui.UI_BUTTON_PRESSED:
                     panel.handle_event(event)
 
+        sim.results = formulas.results
+        
         manager.update(dt)
-        sim.update(dt)
+        # pass dt in seconds consistently
+        sim.update(dt_ms)
+
 
         screen.fill((255, 255, 255))
         pg.draw.rect(screen, (0, 0, 0), gui_window)

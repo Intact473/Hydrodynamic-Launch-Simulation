@@ -39,13 +39,15 @@ class ControlPanel:
             """Helper function to add a labeled text entry field."""
             nonlocal cursor_y
 
-            gui.elements.UILabel(
+            label =gui.elements.UILabel(
                 relative_rect=pg.Rect(pad, cursor_y, 200, label_h),
                 text=label_text,
                 container=self.panel,
                 manager=manager
             )
             cursor_y += label_h + 4 
+            label.text_horiz_alignment = 'left'
+            label.rebuild()
 
             entry = gui.elements.UITextEntryLine(
                 relative_rect=pg.Rect(pad, cursor_y, w - 2*pad, input_h),
