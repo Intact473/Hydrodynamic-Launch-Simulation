@@ -26,7 +26,6 @@ def run_window(start=None, stop=None):
     
     
 
-    formulas.calculateValues()
     while running:
         # Handle events
         dt = clock.tick(60) # sets framerate (fps)
