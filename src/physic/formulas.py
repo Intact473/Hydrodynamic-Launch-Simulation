@@ -12,7 +12,7 @@ def start(values:dict):
     print("Simulation started")
     set_values(values)
     global results
-    results = calculateValues(plotValues = False)
+    results = calculateValues(plotValues = True)
     vw.get_sim().time = 0.0
 
 
@@ -74,6 +74,8 @@ def Air_Resistance(diameter_rocket, velocity):
     rho_air = 1.225  # kg/m^3
     radius_rocket = diameter_rocket / 2
     cross_section_area = math.pi * (radius_rocket ** 2)
+    if velocity < 0:
+        C_w *= -1
     return 0.5 * C_w * rho_air * cross_section_area * velocity**2
 
 def Gravity_force(mass):
@@ -145,6 +147,7 @@ def calculateValues(plotValues = False):
         "air_resistance": 0.0,
         "total_force": (thrust0 - 0.0 - (gravity_force0 := Gravity_force(total_mass0 := inputs["empty_rocket_weight"] + inputs["density_water"] * inputs["water level rocket"]))),
         "gravity_force": gravity_force0,
+        "acceleration": (accel0 := ( (thrust0 - gravity_force0) / total_mass0 ) if total_mass0 > 0 else 0.0),
         "velocity": 0.0,
         "posY": 0.0,
         "water_level": inputs["water level rocket"],
@@ -172,7 +175,8 @@ def calculateValues(plotValues = False):
                 "air_resistance": (air_resistance := Air_Resistance(inputs["diameter_rocket"], last["velocity"])),
                 "gravity_force": (gravity_force := Gravity_force(total_mass := inputs["empty_rocket_weight"])) ,
                 "total_force": (total_force := - air_resistance - gravity_force),   # no more thrust
-                "velocity": last["velocity"] + (total_force / total_mass) * dt,
+                "acceleration": (acceleration := (total_force / total_mass) if total_mass > 0 else 0.0),
+                "velocity": last["velocity"] + (acceleration) * dt,
                 "posY": max(0.0, last["posY"] + last["velocity"] * dt),
                 "water_level": 0.0,
                 "total_mass": total_mass,
@@ -189,8 +193,9 @@ def calculateValues(plotValues = False):
                 "thrust": (thrust_value := Thrust(mass_flow_rate, ejection_velocity)),
                 "air_resistance": (air_resistance := Air_Resistance(inputs["diameter_rocket"], last["velocity"])),
                 "gravity_force": (Gravity_force(total_mass := inputs["empty_rocket_weight"] + inputs["density_water"] * (water_level := max(0.0, last["water_level"] - (mass_flow_rate / inputs["density_water"]) * dt)))) ,
-                "total_force": (total_force :=thrust_value - air_resistance - Gravity_force(total_mass)),
-                "velocity": last["velocity"] + (total_force / total_mass) * dt,
+                "total_force": (total_force := thrust_value - air_resistance - Gravity_force(total_mass)),
+                "acceleration": (acceleration := (total_force / total_mass) if total_mass > 0 else 0.0),
+                "velocity": last["velocity"] + acceleration * dt,
                 "posY": max(0.0, last["posY"] + last["velocity"] * dt),
                 "water_level": water_level,
                 "total_mass": total_mass,
@@ -207,8 +212,10 @@ def calculateValues(plotValues = False):
             "pressure (Pa)": [r["pressure"] for r in results],
             "water_level (m^3)": [r["water_level"] for r in results],
             "ejection_velocity (m/s)": [r["ejection_velocity"] for r in results],
-            "air_volume (m^3)": [r["air_volume"] for r in results],
+            # "air_volume (m^3)": [r["air_volume"] for r in results],
+            "air_resistance (N)": [r["air_resistance"] for r in results],
             "velocity (m/s)": [r["velocity"] for r in results],
+            "acceleration (m/s^2)": [r.get("acceleration", 0.0) for r in results],
             "posY (m)": [r["posY"] for r in results],
             "total_force (N)": [r["total_force"] for r in results],
         }
