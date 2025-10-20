@@ -59,8 +59,8 @@ class Simulation:
                 posY = 0
                 self.rocket_is_flying = False
                 print("Simulation ended")
-            # else: 
-                # posY = self.results[int(self.time)]['posY']
+            else: 
+                posY = self.results[int(self.time)]['posY']
                 
             
             
