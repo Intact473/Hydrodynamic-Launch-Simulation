@@ -62,7 +62,7 @@ class ControlPanel:
         self.uinp_pressure = add_labeled_entry("Pressure [bar]", "6.00")
         self.uinp_weight_empty_rocket = add_labeled_entry("Weight empty rocket [kg]", "0.60")
         self.uinp_thrust_nozzle_diameter = add_labeled_entry("Thrust nozzle d [mm]", "10.0")
-        self.uinp_water_level_rocket = add_labeled_entry("Water level rocket [l]", "0.50")
+        self.uinp_water_level_rocket = add_labeled_entry("water_level_rocket [l]", "0.50")
         self.uinp_cross_sectional_rocket = add_labeled_entry("Rocket diameter [m]", "0.10")
 
 
@@ -115,8 +115,8 @@ class ControlPanel:
             uinp_values["volume"] = float(self.uinp_volumePET.get_text())
             uinp_values["pressure"] = float(self.uinp_pressure.get_text())
             uinp_values["empty_rocket_weight"] = float(self.uinp_weight_empty_rocket.get_text())
-            uinp_values["thrust nozzle diameter"] = float(self.uinp_thrust_nozzle_diameter.get_text())
-            uinp_values["water level rocket"] = float(self.uinp_water_level_rocket.get_text())
+            uinp_values["thrust_nozzle_diameter"] = float(self.uinp_thrust_nozzle_diameter.get_text())
+            uinp_values["water_level_rocket"] = float(self.uinp_water_level_rocket.get_text())
             uinp_values["diameter_rocket"] = float(self.uinp_cross_sectional_rocket.get_text())
         except ValueError as e:
             print("Error: Invalid uinput in control panel", e)

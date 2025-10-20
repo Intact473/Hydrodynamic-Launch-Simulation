@@ -110,9 +110,9 @@ def calculateValues(plotValues = False):
     defaults = {
         "pressure": 0,               # bar
         "volume": 0,                 # liters (initial air volume)
-        "water level rocket": 0,     # liters (initial water volume)
+        "water_level_rocket": 0,     # liters (initial water volume)
         "empty_rocket_weight": 0,    # kg
-        "thrust nozzle diameter": 0, # mm
+        "thrust_nozzle_diameter": 0, # mm
         "kappa_gas": 1.4,
         "density_water": 997.0,       # kg/m^3
         "P_atm": 101325.0,             # Pa
@@ -127,7 +127,7 @@ def calculateValues(plotValues = False):
 
     # convert units
     inputs["pressure"] *= 1e5  # atm to Pa
-    inputs["water level rocket"] *= 1e-3  # liters to m^3
+    inputs["water_level_rocket"] *= 1e-3  # liters to m^3
     inputs["volume"] *= 1e-3  # liters to m^3 
     print(inputs)
 
@@ -142,15 +142,15 @@ def calculateValues(plotValues = False):
         "air_volume": (air_volume0 := inputs["volume"]),
         "pressure": (pressure0 := inputs["pressure"]),
         "ejection_velocity": (v_a0 := Ejection_velocity(pressure0, inputs["kappa_gas"], inputs["density_water"], inputs["P_atm"])),
-        "mass_flow": (mass_flow0 := Mass_flow(inputs["density_water"], v_a0, (nozzle_area := calculate_thrust_nozzel_area(inputs["thrust nozzle diameter"])))),
+        "mass_flow": (mass_flow0 := Mass_flow(inputs["density_water"], v_a0, (nozzle_area := calculate_thrust_nozzel_area(inputs["thrust_nozzle_diameter"])))),
         "thrust": (thrust0 := Thrust(mass_flow0, v_a0)),
         "air_resistance": 0.0,
-        "total_force": (thrust0 - 0.0 - (gravity_force0 := Gravity_force(total_mass0 := inputs["empty_rocket_weight"] + inputs["density_water"] * inputs["water level rocket"]))),
+        "total_force": (thrust0 - 0.0 - (gravity_force0 := Gravity_force(total_mass0 := inputs["empty_rocket_weight"] + inputs["density_water"] * inputs["water_level_rocket"]))),
         "gravity_force": gravity_force0,
         "acceleration": (accel0 := ( (thrust0 - gravity_force0) / total_mass0 ) if total_mass0 > 0 else 0.0),
         "velocity": 0.0,
         "posY": 0.0,
-        "water_level": inputs["water level rocket"],
+        "water_level": inputs["water_level_rocket"],
         "total_mass": total_mass0,
     })
 
