@@ -12,7 +12,7 @@ def start(values:dict):
     print("Simulation started")
     set_values(values)
     global results
-    results = calculateValues(plotValues = True)
+    results = calculateValues(plotValues = False)
     vw.get_sim().time = 0.0
 
 
