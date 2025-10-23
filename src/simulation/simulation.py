@@ -66,7 +66,7 @@ class Simulation:
             
             self.rocket.pos.y = posY + self.start_pos_y
             # print(self.start_pos_y)
-            print("posY: ", self.rocket.pos.y, " at time: ", self.time)
+            # print("posY: ", self.rocket.pos.y, " at time: ", self.time)
 
             target = self.rocket.pos - Vec2(0, 1.5)
             self.camera_center += (target - self.camera_center) * 0.1
