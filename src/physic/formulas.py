@@ -108,17 +108,14 @@ def Pressure(P_0, V_0, V, kappa_gas):
 	return P_0 * (V_0 / V) ** kappa_gas
 
 # Ejection_velocity: avoid math domain errors, return 0 when not physically valid
-def Ejection_velocity(pressure, kappa_gas, density_water, P_atm):
-	# require sensible values
-	if pressure <= P_atm or pressure <= 0 or density_water <= 0 or kappa_gas <= 1:
-		return 0.0
-	term = 1 - (P_atm / pressure) ** ((kappa_gas - 1) / kappa_gas)
-	if term <= 0:
-		return 0.0
-	sqrt_arg = (2 * kappa_gas) / (kappa_gas - 1) * (pressure) / density_water * term
-	if sqrt_arg <= 0:
-		return 0.0
-	return math.sqrt(sqrt_arg)
+def Ejection_velocity(pressure, density_water, P_atm):
+    """
+    Calculate the ejection velocity of water using the formula:
+    v = sqrt(2 * (p - p_atm) / rho)
+    """
+    if pressure <= P_atm or density_water <= 0:
+        return 0.0  # Return 0 if pressure is less than or equal to atmospheric pressure or density is invalid
+    return math.sqrt(2 * (pressure - P_atm) / density_water)
 
 def Mass_flow(density_water, ejection_velocity, nozzle_area):
     return density_water * ejection_velocity * nozzle_area
@@ -197,7 +194,7 @@ def calculateValues(plotValues = False):
         "time": 0.0,
         "air_volume": (air_volume0 := max(inputs["bottle_volume"] - inputs["water_level_rocket"], 0.0)),
         "pressure": (pressure0 := inputs["pressure"]),
-        "ejection_velocity": (v_a0 := Ejection_velocity(pressure0, inputs["kappa_gas"], inputs["density_water"], inputs["P_atm"])),
+        "ejection_velocity": (v_a0 := Ejection_velocity(pressure0, inputs["density_water"], inputs["P_atm"])),
         "mass_flow": (mass_flow0 := Mass_flow(inputs["density_water"], v_a0, (nozzle_area := calculate_thrust_nozzel_area(inputs["thrust_nozzle_diameter"])))),
         "thrust": (thrust0 := Thrust(mass_flow0, v_a0)),
         "air_resistance": 0.0,
@@ -254,7 +251,7 @@ def calculateValues(plotValues = False):
                 "air_volume": (air_volume := Air_volume(inputs["bottle_volume"], water_level)),
                 # pressure using initial_air_volume as V_0
                 "pressure": (pressure := Pressure(inputs["pressure"], inputs["bottle_volume"] - inputs["water_level_rocket"], air_volume, inputs["kappa_gas"])),
-                "ejection_velocity": (ejection_velocity := Ejection_velocity(pressure, inputs["kappa_gas"], inputs["density_water"], inputs["P_atm"])),
+                "ejection_velocity": (ejection_velocity := Ejection_velocity(pressure, inputs["density_water"], inputs["P_atm"])),
                 "mass_flow": (mass_flow_rate := Mass_flow(inputs["density_water"], ejection_velocity, nozzle_area)),
                 "thrust": (thrust_value := Thrust(mass_flow_rate, ejection_velocity)),
                 "air_resistance": (air_resistance := Air_Resistance(inputs["diameter_rocket"], last["velocity"])),
