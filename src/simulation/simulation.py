@@ -16,7 +16,6 @@ class Simulation:
         )
 
         self.start_pos_y = 0.0
-        self.use_image_bg = True
         self.bg_image = pg.image.load("img/ohm.jpg").convert()
         self.bg_image = pg.transform.scale(self.bg_image, (self.rect.width, self.rect.height))
         self.use_image_bg = True
