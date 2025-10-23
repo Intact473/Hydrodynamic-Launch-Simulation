@@ -19,7 +19,7 @@ def start(values:dict):
     # Contour plot for max height
     if True:
         try_combinations(min_nozzle_mm=1.0, max_nozzle_mm=40.0, step_nozzle_mm=1.0,
-                     min_bottle_volume_l=0.1, max_bottle_volume_l=1.1, step_bottle_volume_l=0.1)
+                     min_bottle_volume_l=0.1, max_bottle_volume_l=1.0, step_bottle_volume_l=0.025)
 
 def stop():
     print("Simulation stopped")
@@ -27,14 +27,8 @@ def stop():
 
 def set_values(values: dict):
     """
-    get all gui inputs
-    Parameters:
-        bottle_volume: in liters
-        pressure: in bar
-        empty_rocket_weight: in kg
-        thrust_nozzle_diameter: in mm
+    Store GUI inputs (validation moved to calculateValues so try_combinations is validated too).
     """
-
     print(values)
     global gui_input_values
     gui_input_values = values.copy()
@@ -64,7 +58,7 @@ def try_combinations(min_nozzle_mm: float, max_nozzle_mm: float, step_nozzle_mm:
     for i, thrust in enumerate(thrust_values):
         for j, water_level in enumerate(water_level_values):
             gui_input_values["thrust_nozzle_diameter"] = thrust
-            gui_input_values["water_level_rocket"] = water_level
+            gui_input_values["water_level_rocket"] = round(water_level,5)
             results = calculateValues(plotValues=False)
             max_heights[i, j] = get_max_height(results)
             print(f"Thrust Nozzle Diameter: {thrust} mm, Water Level: {water_level} l => Max Height: {max_heights[i, j]:.2f} m")
@@ -177,6 +171,58 @@ def calculateValues(plotValues = False):
     inputs = defaults.copy()
     inputs.update(gui_input_values or {})
 
+    # --- input validation (performed BEFORE unit conversion) ---
+    # ensure numeric types where possible
+    try:
+        # these keys expected from GUI (in liters / user units)
+        bottle_vol = float(inputs.get("bottle_volume", 0))
+        water_lvl = float(inputs.get("water_level_rocket", 0))
+        pressure_bar = float(inputs.get("pressure", 0))
+        empty_mass = float(inputs.get("empty_rocket_weight", 0))
+        nozzle_mm = float(inputs.get("thrust_nozzle_diameter", 0))
+        kappa = float(inputs.get("kappa_gas", 1.4))
+        rho_water = float(inputs.get("density_water", 997.0))
+        P_atm_val = float(inputs.get("P_atm", 101325.0))
+        diam_rocket = float(inputs.get("diameter_rocket", 0.10))
+        end_time = float(inputs.get("endTime", 5.0))
+    except (TypeError, ValueError):
+        raise ValueError("One or more inputs are not numeric.")
+
+    if bottle_vol <= 0:
+        raise ValueError("bottle_volume must be > 0 (liters).")
+    if water_lvl < 0:
+        raise ValueError("water_level_rocket cannot be negative (liters).")
+    if water_lvl > bottle_vol:
+        raise ValueError("water_level_rocket cannot exceed bottle_volume (liters).")
+    if pressure_bar <= 0:
+        raise ValueError("pressure must be > 0 (bar).")
+    if empty_mass < 0:
+        raise ValueError("empty_rocket_weight cannot be negative (kg).")
+    if nozzle_mm <= 0:
+        raise ValueError("thrust_nozzle_diameter must be > 0 (mm).")
+    if kappa <= 1.0:
+        raise ValueError("kappa_gas must be > 1.0.")
+    if rho_water <= 0:
+        raise ValueError("density_water must be > 0 (kg/m^3).")
+    if P_atm_val <= 0:
+        raise ValueError("P_atm must be > 0 (Pa).")
+    if diam_rocket <= 0:
+        raise ValueError("diameter_rocket must be > 0 (m).")
+    if end_time < 0:
+        raise ValueError("endTime cannot be negative (s).")
+
+    # update validated (ensures proper numeric types in inputs)
+    inputs["bottle_volume"] = bottle_vol
+    inputs["water_level_rocket"] = water_lvl
+    inputs["pressure"] = pressure_bar
+    inputs["empty_rocket_weight"] = empty_mass
+    inputs["thrust_nozzle_diameter"] = nozzle_mm
+    inputs["kappa_gas"] = kappa
+    inputs["density_water"] = rho_water
+    inputs["P_atm"] = P_atm_val
+    inputs["diameter_rocket"] = diam_rocket
+    inputs["endTime"] = end_time
+    # --- end validation ---
 
     # convert units
     inputs["pressure"] *= 1e5  # bar to Pa
@@ -186,7 +232,7 @@ def calculateValues(plotValues = False):
 
     results = []
 
-    dt = 0.001  # 1 ms
+    dt = 0.0002  # 0.2 ms
     steps = int(max(0.0, inputs["endTime"]) / dt) + 1
 
     # Store initial values at t=0
