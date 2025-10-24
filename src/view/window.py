@@ -6,6 +6,7 @@ from view.gui import ControlPanel
 from simulation.simulation import Simulation
 import physic.formulas as formulas
 Vec2 = pg.math.Vector2
+import math
 
 pg.init()
 
@@ -44,6 +45,7 @@ def run_window(start=None, stop=None):
         sim.rocket_is_flying = False
         sim.rocket.pos = Vec2(0.0, 0.0)
         sim.pixel_to_meter = 180.0
+        sim.rocket.angle = math.radians(90.0)
         sim.start_pos_y = sim.rocket.pos.y
         sim.camera_center = Vec2(sim.rocket.pos) - Vec2(0, 2.0)
         if stop:
