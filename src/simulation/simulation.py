@@ -7,7 +7,7 @@ import physic.formulas as formulas
 class Simulation:
     def __init__(self, sim_rect: pg.Rect):
         self.rect = sim_rect
-        self.pixel_to_meter = 100.0
+        self.pixel_to_meter = 180.0
         self.rocket = Rocket(
             length_rocket=2.0,
             radius_of_rocket_cylinder=0.22,
@@ -44,14 +44,9 @@ class Simulation:
 
     def update(self, dt: float):
         """Update the simulation state
-        :param dt: Time delta in milliseconds since the last update
-        100px = 1 meter
+        :param dt: Time delta in seconds since the last update
         """
         if self.rocket_is_flying:
-            # use instance time (dt is expected in seconds)
-            # print("time", self.time)
-            # print("len results", len(self.results))
-
             posY = 0
 
             if int(self.time) >= len(self.results):
@@ -60,27 +55,20 @@ class Simulation:
                 print("Simulation ended")
             else: 
                 posY = self.results[int(self.time)]['posY']
-                
-            
-            
-            self.rocket.pos.y = posY + self.start_pos_y
-            # print(self.start_pos_y)
-            # print("posY: ", self.rocket.pos.y, " at time: ", self.time)
+            self.rocket.pos.y = self.start_pos_y - posY
 
             target = self.rocket.pos - Vec2(0, 1.5)
-            self.camera_center += (target - self.camera_center) * 0.1
-            
-            d_between_actual_pos_and_start_pos = abs(self.rocket.pos.y - self.start_pos_y)
-            new_calculated_zoom = max(30.0, min(100.0, 100.0 - self.zoom_speed * d_between_actual_pos_and_start_pos))
-            self.pixel_to_meter = new_calculated_zoom
-            if d_between_actual_pos_and_start_pos > (self.rect.height / self.pixel_to_meter) * 0.3:
-                self.pixel_to_meter = max(30.0, self.pixel_to_meter * 0.995)
+            follow_strength = min(1.0, 0.08 + 0.35 * (target - self.camera_center).length())
+            self.camera_center += (target - self.camera_center) * follow_strength
 
-            elif d_between_actual_pos_and_start_pos < (self.rect.height / self.pixel_to_meter) * 0.1:
-                self.pixel_to_meter = min(100.0, self.pixel_to_meter * 1.005)
-            # print(f"d_between_actual_pos_and_start_pos: {d_between_actual_pos_and_start_pos:.2f}, pos.y: {self.rocket.pos.y:.2f}, cam.y: {self.camera_center.y:.2f}, zoom: {self.pixel_to_meter:.2f}")
+            d_between = abs(self.rocket.pos.y - self.start_pos_y)
+            max_zoom_in = 180.0
+            min_zoom_out = 30.0
+            new_calculated_zoom = max(min_zoom_out,min(max_zoom_in,max_zoom_in - self.zoom_speed * d_between)
+            )
+            self.pixel_to_meter += (new_calculated_zoom - self.pixel_to_meter) * 0.05
             self.time += dt
-    
+        
     def draw_axes(self, surface: pg.Surface, meters_to_px: float, camera_center: Vec2):
         width, height = surface.get_size()
         center_x = width // 2
@@ -88,16 +76,24 @@ class Simulation:
 
         world_origin_screen = Vec2(
             center_x - (camera_center.x * meters_to_px),
-            center_y + (camera_center.y * meters_to_px)
+            center_y - (camera_center.y * meters_to_px)
         )
 
+        pg.draw.circle(surface, (255, 0, 0), (int(world_origin_screen.x), int(world_origin_screen.y)), 5)
         for y in range(-100, 100):
             y_world = y
             y_screen = world_origin_screen.y - y_world * meters_to_px
             if 0 <= y_screen <= height:
-                pg.draw.line(surface, (0, 255, 0), (0, int(y_screen)), (width, int(y_screen)),1)
+                line_width = 1
+                line_color = (0, 255, 0)
+
+                if y == 0:
+                    line_width = 4
+                    line_color = (255, 0, 0)
+                pg.draw.line(surface, line_color, (0, int(y_screen)), (width, int(y_screen)), line_width)
                 font = pg.font.SysFont(None, 18)
-                label = font.render(f"{y-1} m", True, (0, 255, 0))
+                label_text = "GROUND" if y == 0 else f"{y} m"
+                label = font.render(label_text, True, line_color)
                 surface.blit(label, (5, int(y_screen) - 10))
 
     
@@ -109,9 +105,9 @@ class Simulation:
         else:
             sim_surface.fill((0, 0, 0))
             self.draw_axes(sim_surface, self.pixel_to_meter, self.camera_center)
-            
         self.rocket.draw(sim_surface, meters_to_px=self.pixel_to_meter, camera_center = self.camera_center ,outline=True)
+        
         font = pg.font.SysFont(None, 24)
         #Please do not delete the line below, it might be useful when the rocket is falling down to the earth
         sim_surface.blit(font.render(f"zoom: {self.pixel_to_meter:.1f}", True, (255,255,255)), (10, 30))
-        sim_surface.blit(font.render(f"rocket hight: {(self.rocket.pos.y - 6.1):.1f}", True, (255,255,255)), (10, 10))
+        sim_surface.blit(font.render(f"rocket hight: {-(self.rocket.pos.y):.1f}", True, (255,255,255)), (10, 10))

@@ -13,12 +13,16 @@ class Rocket:
                  nozzle_d: float = formulas.gui_input_values.get("thrust_nozzle_diameter", 60) / 1000.0,
                  angle_deg: float = 90.0,
                  start_pos_rocket: Vec2 = Vec2(2.5, 1.2)):
-        self.length_rocket = float(length_rocket)
-        self.radius_of_rocket_cylinder = float(radius_of_rocket_cylinder)
-        self.nozzle_d = float(nozzle_d)
+        self.scale = 0.25
+
+        self.length_rocket = float(length_rocket) * self.scale
+        self.radius_of_rocket_cylinder = float(radius_of_rocket_cylinder) * self.scale
+        self.nozzle_d = float(nozzle_d) * self.scale
+
         self.angle = math.radians(angle_deg)
         self.pos = Vec2(start_pos_rocket)
 
+        # Farben
         self.color_of_bottle = (20, 180, 255)
         self.color_of_outline = (48, 56, 70)
         self.color_of_fin = (255, 0, 0)
@@ -27,42 +31,30 @@ class Rocket:
         self.color_of_tennis_ball = (255, 200, 0)
 
     def create_tennis_ball(self):
-        """Create the tennis ball at the tip of the rocket."""
         L = self.length_rocket
-        x_start_ball = 0.1 * L
-        nose_length = 0.10 * L
-        x_center = x_start_ball + nose_length
+        x_center = L * (1 + 0.10 + 0.03)
         y_center = 0.0
         return Vec2(x_center, y_center), 0.03 * L
 
     def create_nose_module(self):
-        """Create the nose cone of the rocket."""
         L = self.length_rocket
         R = self.radius_of_rocket_cylinder
-        x_start = 0.1 * L
+        x_start = L
         nose_length = 0.10 * L
-        nose_height = 0.25 * R
         x_tip = x_start + nose_length
+        nose_height = 0.25 * R
 
-        nose_upper = [
-            (x_start, R * 0.6),
-            (x_tip, nose_height * 0.2),
-        ]
-        nose_lower = [
-            (x_tip, -nose_height * 0.2),
-            (x_start, -R * 0.6),
-        ]
+        nose_upper = [(x_start, R * 0.6), (x_tip, nose_height * 0.2)]
+        nose_lower = [(x_tip, -nose_height * 0.2), (x_start, -R * 0.6)]
         return nose_lower + nose_upper
 
     def create_bottle(self):
-        """Create Bottle"""
         L = self.length_rocket
         R = self.radius_of_rocket_cylinder
-
-        front = 0.1 * L
-        end_neck = -0.50 * L
+        end_neck = 0.0
         len_neck = max(0.05 * L, 0.16 * L)
         start_neck = end_neck + len_neck
+        front = L
 
         radius_body = 0.6 * R
         radius_nozzle = max(self.nozzle_d * 0.5, 0.25 * R)
@@ -81,11 +73,9 @@ class Rocket:
         return lower + upper
 
     def create_fins(self):
-        """Create the fins"""
         L = self.length_rocket
         R = self.radius_of_rocket_cylinder
-
-        end_neck = -0.50 * L
+        end_neck = -0.0
         len_neck = max(0.05 * L, 0.16 * L)
         start_neck = end_neck + len_neck
 
@@ -107,16 +97,9 @@ class Rocket:
         return fin_bottom, fin_top
 
     def _center_nozzle(self):
-        return Vec2(-0.50 * self.length_rocket, 0.0)
+        return Vec2(0.0, 0.0)
 
     def _transform_points(self, pts, meters_to_px: float, camera_center: Vec2, surf: pg.Surface):
-        """Transform local rocket points to screen coordinates
-        :param pts: List of (x, y) points in rocket-local coordinates (meters)
-        :param meters_to_px: Conversion factor from meters to pixels
-        :param camera_center: The world coordinates at the center of the screen
-        :param surf: The Pygame surface to draw on
-        :return: List of (x, y) points in screen coordinates (pixels)
-        """
         cos_angle, sin_angle = math.cos(self.angle), math.sin(self.angle)
         out = []
         for x, y in pts:
@@ -124,20 +107,11 @@ class Rocket:
             rotated_y = x * sin_angle + y * cos_angle
             x_screen_pos = (self.pos.x + rotated_x - camera_center.x) * meters_to_px + 0.5 * surf.get_width()
             y_screen_pos = (self.pos.y - rotated_y - camera_center.y) * meters_to_px + 0.5 * surf.get_height()
-
             out.append((int(round(x_screen_pos)), int(round(y_screen_pos))))
         return out
-    
+
     def draw(self, surf: pg.Surface, meters_to_px: float = 100.0,
              camera_center: Vec2 = Vec2(0, 0), outline: bool = True):
-        """
-        Draw the rocket onto the given surface.
-        100px = 1 meter
-        :param surf: The Pygame surface to draw on.
-        :param meters_to_px: Conversion factor from meters to pixels.
-        :param camera_center: The world coordinates at the center of the screen.
-        :param outline: Whether to draw outlines around the rocket parts.
-        """
 
         nose_pts_screen = self._transform_points(self.create_nose_module(), meters_to_px, camera_center, surf)
         pg.draw.polygon(surf, self.color_of_nose, nose_pts_screen)
