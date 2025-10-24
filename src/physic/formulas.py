@@ -353,5 +353,5 @@ def calculateValues(plotValues = False):
         plt.tight_layout(pad=0.3)
         plt.show()
 
-    print(results)
+    #print(results)
     return results
