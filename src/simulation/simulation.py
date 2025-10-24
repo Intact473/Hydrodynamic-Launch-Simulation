@@ -7,7 +7,7 @@ import physic.formulas as formulas
 class Simulation:
     def __init__(self, sim_rect: pg.Rect):
         self.rect = sim_rect
-        self.pixel_to_meter = 100.0
+        self.pixel_to_meter = 180.0
         self.rocket = Rocket(
             length_rocket=2.0,
             radius_of_rocket_cylinder=0.22,
@@ -44,14 +44,9 @@ class Simulation:
 
     def update(self, dt: float):
         """Update the simulation state
-        :param dt: Time delta in milliseconds since the last update
-        100px = 1 meter
+        :param dt: Time delta in seconds since the last update
         """
         if self.rocket_is_flying:
-            # use instance time (dt is expected in seconds)
-            # print("time", self.time)
-            # print("len results", len(self.results))
-
             posY = 0
 
             if int(self.time) >= len(self.results):
@@ -60,28 +55,18 @@ class Simulation:
                 print("Simulation ended")
             else: 
                 posY = self.results[int(self.time)]['posY']
-                
-            
-            
-            print(self.rocket.pos.y)
             self.rocket.pos.y = self.start_pos_y - posY
-            # print(self.start_pos_y)
-            # print("posY: ", self.rocket.pos.y, " at time: ", self.time)
 
             target = self.rocket.pos - Vec2(0, 1.5)
             self.camera_center += (target - self.camera_center) * 0.1
-            
-            d_between_actual_pos_and_start_pos = abs(self.rocket.pos.y - self.start_pos_y)
-            new_calculated_zoom = max(30.0, min(100.0, 100.0 - self.zoom_speed * d_between_actual_pos_and_start_pos))
-            self.pixel_to_meter = new_calculated_zoom
-            if d_between_actual_pos_and_start_pos > (self.rect.height / self.pixel_to_meter) * 0.3:
-                self.pixel_to_meter = max(30.0, self.pixel_to_meter * 0.995)
-
-            elif d_between_actual_pos_and_start_pos < (self.rect.height / self.pixel_to_meter) * 0.1:
-                self.pixel_to_meter = min(100.0, self.pixel_to_meter * 1.005)
-            # print(f"d_between_actual_pos_and_start_pos: {d_between_actual_pos_and_start_pos:.2f}, pos.y: {self.rocket.pos.y:.2f}, cam.y: {self.camera_center.y:.2f}, zoom: {self.pixel_to_meter:.2f}")
+            d_between = abs(self.rocket.pos.y - self.start_pos_y)
+            max_zoom_in = 180.0
+            min_zoom_out = 30.0
+            new_calculated_zoom = max(min_zoom_out,min(max_zoom_in,max_zoom_in - self.zoom_speed * d_between)
+            )
+            self.pixel_to_meter += (new_calculated_zoom - self.pixel_to_meter) * 0.05
             self.time += dt
-    
+        
     def draw_axes(self, surface: pg.Surface, meters_to_px: float, camera_center: Vec2):
         width, height = surface.get_size()
         center_x = width // 2
