@@ -29,20 +29,19 @@ class Rocket:
     def create_tennis_ball(self):
         """Create the tennis ball at the tip of the rocket."""
         L = self.length_rocket
-        x_start_ball = 0.1 * L
         nose_length = 0.10 * L
-        x_center = x_start_ball + nose_length
+        x_center = L + nose_length + 0.03 * L
         y_center = 0.0
         return Vec2(x_center, y_center), 0.03 * L
 
     def create_nose_module(self):
-        """Create the nose cone of the rocket."""
         L = self.length_rocket
         R = self.radius_of_rocket_cylinder
-        x_start = 0.1 * L
-        nose_length = 0.10 * L
-        nose_height = 0.25 * R
+
+        x_start = L                     # Start direkt am Flaschenende
+        nose_length = 0.10 * L          # etwas längere Nase
         x_tip = x_start + nose_length
+        nose_height = 0.25 * R
 
         nose_upper = [
             (x_start, R * 0.6),
@@ -59,10 +58,10 @@ class Rocket:
         L = self.length_rocket
         R = self.radius_of_rocket_cylinder
 
-        front = 0.1 * L
-        end_neck = -0.50 * L
+        end_neck = 0.0
         len_neck = max(0.05 * L, 0.16 * L)
         start_neck = end_neck + len_neck
+        front = L
 
         radius_body = 0.6 * R
         radius_nozzle = max(self.nozzle_d * 0.5, 0.25 * R)
@@ -85,7 +84,7 @@ class Rocket:
         L = self.length_rocket
         R = self.radius_of_rocket_cylinder
 
-        end_neck = -0.50 * L
+        end_neck = -0.0
         len_neck = max(0.05 * L, 0.16 * L)
         start_neck = end_neck + len_neck
 
@@ -107,7 +106,7 @@ class Rocket:
         return fin_bottom, fin_top
 
     def _center_nozzle(self):
-        return Vec2(-0.50 * self.length_rocket, 0.0)
+        return Vec2(0.0, 0.0)
 
     def _transform_points(self, pts, meters_to_px: float, camera_center: Vec2, surf: pg.Surface):
         """Transform local rocket points to screen coordinates

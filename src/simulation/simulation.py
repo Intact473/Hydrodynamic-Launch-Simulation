@@ -89,16 +89,17 @@ class Simulation:
 
         world_origin_screen = Vec2(
             center_x - (camera_center.x * meters_to_px),
-            center_y + (camera_center.y * meters_to_px)
+            center_y - (camera_center.y * meters_to_px)
         )
 
+        pg.draw.circle(surface, (255, 0, 0), (int(world_origin_screen.x), int(world_origin_screen.y)), 5)
         for y in range(-100, 100):
             y_world = y
             y_screen = world_origin_screen.y - y_world * meters_to_px
             if 0 <= y_screen <= height:
                 pg.draw.line(surface, (0, 255, 0), (0, int(y_screen)), (width, int(y_screen)),1)
                 font = pg.font.SysFont(None, 18)
-                label = font.render(f"{y-1} m", True, (0, 255, 0))
+                label = font.render(f"{y} m", True, (0, 255, 0))
                 surface.blit(label, (5, int(y_screen) - 10))
 
     
@@ -111,6 +112,7 @@ class Simulation:
             sim_surface.fill((0, 0, 0))
             self.draw_axes(sim_surface, self.pixel_to_meter, self.camera_center)
         self.rocket.draw(sim_surface, meters_to_px=self.pixel_to_meter, camera_center = self.camera_center ,outline=True)
+        
         font = pg.font.SysFont(None, 24)
         #Please do not delete the line below, it might be useful when the rocket is falling down to the earth
         sim_surface.blit(font.render(f"zoom: {self.pixel_to_meter:.1f}", True, (255,255,255)), (10, 30))
