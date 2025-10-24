@@ -13,7 +13,7 @@ def start(values:dict):
     set_values(values)
     global results
     results = calculateValues(plotValues = False)
-    print(get_max_height(results))
+    print("theoretical max height: ", get_max_height(results))
     vw.get_sim().time = 0.0
 
     # Contour plot for max height
