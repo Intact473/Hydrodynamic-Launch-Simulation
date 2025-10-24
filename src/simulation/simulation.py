@@ -58,7 +58,9 @@ class Simulation:
             self.rocket.pos.y = self.start_pos_y - posY
 
             target = self.rocket.pos - Vec2(0, 1.5)
-            self.camera_center += (target - self.camera_center) * 0.1
+            follow_strength = min(1.0, 0.08 + 0.35 * (target - self.camera_center).length())
+            self.camera_center += (target - self.camera_center) * follow_strength
+
             d_between = abs(self.rocket.pos.y - self.start_pos_y)
             max_zoom_in = 180.0
             min_zoom_out = 30.0
