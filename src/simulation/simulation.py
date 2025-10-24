@@ -82,9 +82,16 @@ class Simulation:
             y_world = y
             y_screen = world_origin_screen.y - y_world * meters_to_px
             if 0 <= y_screen <= height:
-                pg.draw.line(surface, (0, 255, 0), (0, int(y_screen)), (width, int(y_screen)),1)
+                line_width = 1
+                line_color = (0, 255, 0)
+
+                if y == 0:
+                    line_width = 4
+                    line_color = (255, 0, 0)
+                pg.draw.line(surface, line_color, (0, int(y_screen)), (width, int(y_screen)), line_width)
                 font = pg.font.SysFont(None, 18)
-                label = font.render(f"{y} m", True, (0, 255, 0))
+                label_text = "GROUND" if y == 0 else f"{y} m"
+                label = font.render(label_text, True, line_color)
                 surface.blit(label, (5, int(y_screen) - 10))
 
     
