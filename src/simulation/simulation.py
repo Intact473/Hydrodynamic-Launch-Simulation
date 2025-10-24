@@ -64,7 +64,7 @@ class Simulation:
             
             
             print(self.rocket.pos.y)
-            self.rocket.pos.y = posY + self.start_pos_y
+            self.rocket.pos.y = self.start_pos_y - posY
             # print(self.start_pos_y)
             # print("posY: ", self.rocket.pos.y, " at time: ", self.time)
 
