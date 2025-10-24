@@ -10,8 +10,8 @@ Vec2 = pg.math.Vector2
 pg.init()
 
 # Create two separate windows in one
-WINDOW_W, WINDOW_H = 1280, 720
-PANEL_W = 360
+WINDOW_W, WINDOW_H = 1300, 820
+PANEL_W = 280
 screen = pg.display.set_mode((WINDOW_W, WINDOW_H))
 gui_window = pg.Rect(0, 0, PANEL_W, WINDOW_H)
 simulation_window = pg.Rect(PANEL_W, 0, WINDOW_W - PANEL_W, WINDOW_H)
@@ -74,10 +74,15 @@ def run_window(start=None, stop=None):
 
         sim.results = formulas.results
         
-        manager.update(dt)
-        # pass dt in seconds consistently
         sim.update(dt_ms)
 
+        if not sim.rocket_is_flying and formulas.results:
+            max_v = formulas.get_max_velocity(formulas.results)
+            max_h = formulas.get_max_height(formulas.results)
+            panel.out_max_velocity.set_text(f"{max_v:.2f}")
+            panel.out_max_height.set_text(f"{max_h:.2f}")
+            
+        manager.update(dt)
 
         screen.fill((255, 255, 255))
         pg.draw.rect(screen, (0, 0, 0), gui_window)

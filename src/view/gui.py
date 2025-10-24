@@ -88,6 +88,30 @@ class ControlPanel:
             container=self.panel,
             manager=manager
         )
+        cursor_y += 40 + 8
+
+        def add_output_field(label_text: str):
+            nonlocal cursor_y
+            label = gui.elements.UILabel(
+                relative_rect=pg.Rect(pad, cursor_y, 200, label_h),
+                text=label_text,
+                container=self.panel,
+                manager=manager
+            )
+            cursor_y += label_h + 4
+
+            output = gui.elements.UITextEntryLine(
+                relative_rect=pg.Rect(pad, cursor_y, w - 2*pad, input_h),
+                container=self.panel,
+                manager=manager
+            )
+            output.set_text("—")
+            output.rebuild() 
+            cursor_y += input_h + gap
+            return output
+        self.out_max_velocity = add_output_field("Max velocity [m/s]")
+        self.out_max_height = add_output_field("Max height [m]")
+
 
     def handle_event(self, event):
         """Handle button press events."""

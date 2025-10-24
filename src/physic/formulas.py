@@ -9,9 +9,9 @@ max_value = 0.0
 results = []
 
 def start(values:dict):
+    global results
     print("Simulation started")
     set_values(values)
-    global results
     results = calculateValues(plotValues = False)
     print("max height: ", get_max_height(results))
     print("max velocity: ", get_max_velocity(results))
