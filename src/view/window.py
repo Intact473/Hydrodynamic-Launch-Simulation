@@ -49,7 +49,13 @@ def run_window(start=None, stop=None):
         if stop:
             stop()
 
-    panel = ControlPanel(gui_window, manager, on_start=handle_start, on_reset=handle_reset, toggle_mode=sim.toggle_mode)
+    def handle_contour_plot(values):
+        formulas.show_contour_plot(values=values)
+    try:
+        panel = ControlPanel(gui_window, manager, on_start=handle_start, on_reset=handle_reset, on_contour_plot=handle_contour_plot)
+    except Exception as e:
+        print("Error creating control panel:", e)
+        return
     while running:
         # Handle events
         dt = clock.tick(60)  # sets framerate (fps)

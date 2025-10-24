@@ -6,12 +6,12 @@ import physic.formulas as formulas
 
 
 class ControlPanel:
-    def __init__(self, gui_rect: pg.Rect, manager: gui.UIManager, on_start=None, on_reset=None, toggle_mode=None):
+    def __init__(self, gui_rect: pg.Rect, manager: gui.UIManager, on_start=None, on_reset=None, on_contour_plot=None):
         self.gui_rect = gui_rect
         self.manager = manager
         self.on_start = on_start
         self.on_reset = on_reset
-        self.on_toggle_mode = toggle_mode
+        self.on_contour_plot = on_contour_plot
 
         x, y, w, h = gui_rect
         pad = 10
@@ -82,9 +82,9 @@ class ControlPanel:
         )
         cursor_y += 34 + 8
 
-        self.btn_toggle_mode = gui.elements.UIButton(
+        self.contour_plot = gui.elements.UIButton(
             relative_rect=pg.Rect(pad, cursor_y, w - 2*pad, 40),
-            text="Georg Ohm Space Center",
+            text="Show Contour plot",
             container=self.panel,
             manager=manager
         )
@@ -97,8 +97,10 @@ class ControlPanel:
                 self.on_start(values)
         elif event.ui_element == self.btn_reset and self.on_reset:
             self.on_reset()
-        elif event.ui_element == self.btn_toggle_mode and self.on_toggle_mode:
-            self.on_toggle_mode()
+        elif event.ui_element == self.contour_plot and self.on_contour_plot:
+            values = self.read_values()
+            self.on_contour_plot(values)
+
             
     def read_values(self) -> dict:
         """

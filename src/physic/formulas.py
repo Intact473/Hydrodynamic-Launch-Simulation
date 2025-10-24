@@ -15,10 +15,11 @@ def start(values:dict):
     results = calculateValues(plotValues = False)
     print("theoretical max height: ", get_max_height(results))
     vw.get_sim().time = 0.0
+        
 
-    # Contour plot for max height
-    if False:
-        try_combinations(min_nozzle_mm=1.0, max_nozzle_mm=40.0, step_nozzle_mm=1.0,
+def show_contour_plot(values:dict):
+    set_values(values)
+    try_combinations(min_nozzle_mm=1.0, max_nozzle_mm=40.0, step_nozzle_mm=1.0,
                      min_bottle_volume_l=0.1, max_bottle_volume_l=1.0, step_bottle_volume_l=0.025)
 
 def stop():
