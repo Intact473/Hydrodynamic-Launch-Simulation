@@ -17,7 +17,7 @@ def start(values:dict):
     vw.get_sim().time = 0.0
 
     # Contour plot for max height
-    if True:
+    if False:
         try_combinations(min_nozzle_mm=1.0, max_nozzle_mm=40.0, step_nozzle_mm=1.0,
                      min_bottle_volume_l=0.1, max_bottle_volume_l=1.0, step_bottle_volume_l=0.025)
 
@@ -119,7 +119,7 @@ def Thrust(mass_flow, ejection_velocity):
 
 def Air_Resistance(diameter_rocket, velocity):
     # assuming rocket is a cylinder
-    C_w = 1  # drag coefficient
+    C_w = 1  # drag
     rho_air = 1.225  # kg/m^3
     radius_rocket = diameter_rocket / 2
     cross_section_area = math.pi * (radius_rocket ** 2)
@@ -232,7 +232,7 @@ def calculateValues(plotValues = False):
 
     results = []
 
-    dt = 0.0002  # 0.2 ms
+    dt = 0.001  # 1 ms
     steps = int(max(0.0, inputs["endTime"]) / dt) + 1
 
     # Store initial values at t=0
