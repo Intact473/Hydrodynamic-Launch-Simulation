@@ -68,6 +68,15 @@ class Simulation:
             )
             self.pixel_to_meter += (new_calculated_zoom - self.pixel_to_meter) * 0.05
             self.time += dt
+
+            if int(self.time) < len(self.results):
+                velocity = self.results[int(self.time)]["velocity"]
+                target_angle = 90.0 if velocity >= 0 else 270.0
+
+                current_angle = math.degrees(self.rocket.angle)
+                new_angle = current_angle + (target_angle - current_angle) * 0.05
+
+                self.rocket.angle = math.radians(new_angle)
         
     def draw_axes(self, surface: pg.Surface, meters_to_px: float, camera_center: Vec2):
         width, height = surface.get_size()
