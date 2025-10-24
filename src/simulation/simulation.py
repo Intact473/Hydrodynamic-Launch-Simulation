@@ -63,6 +63,7 @@ class Simulation:
                 
             
             
+            print(self.rocket.pos.y)
             self.rocket.pos.y = posY + self.start_pos_y
             # print(self.start_pos_y)
             # print("posY: ", self.rocket.pos.y, " at time: ", self.time)
@@ -109,9 +110,8 @@ class Simulation:
         else:
             sim_surface.fill((0, 0, 0))
             self.draw_axes(sim_surface, self.pixel_to_meter, self.camera_center)
-            
         self.rocket.draw(sim_surface, meters_to_px=self.pixel_to_meter, camera_center = self.camera_center ,outline=True)
         font = pg.font.SysFont(None, 24)
         #Please do not delete the line below, it might be useful when the rocket is falling down to the earth
         sim_surface.blit(font.render(f"zoom: {self.pixel_to_meter:.1f}", True, (255,255,255)), (10, 30))
-        sim_surface.blit(font.render(f"rocket hight: {(self.rocket.pos.y - 6.1):.1f}", True, (255,255,255)), (10, 10))
+        sim_surface.blit(font.render(f"rocket hight: {(self.rocket.pos.y):.1f}", True, (255,255,255)), (10, 10))
