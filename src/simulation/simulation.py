@@ -16,8 +16,6 @@ class Simulation:
         )
 
         self.start_pos_y = 0.0
-        self.bg_image = pg.image.load("img/ohm.jpg").convert()
-        self.bg_image = pg.transform.scale(self.bg_image, (self.rect.width, self.rect.height))
         self.use_image_bg = True
         self.rocket_is_flying = False
         self.zoom_speed = 1.0 # zoom speed, 1 is slow
@@ -105,12 +103,8 @@ class Simulation:
     
     def draw(self, screen: pg.Surface):
         sim_surface = screen.subsurface(self.rect)
-        sim_surface.blit(self.bg_image, (0, 0))
-        if not self.use_image_bg:
-            sim_surface.blit(self.bg_image, (0, 0))
-        else:
-            sim_surface.fill((0, 0, 0))
-            self.draw_axes(sim_surface, self.pixel_to_meter, self.camera_center)
+        sim_surface.fill((0, 0, 0))
+        self.draw_axes(sim_surface, self.pixel_to_meter, self.camera_center)
         self.rocket.draw(sim_surface, meters_to_px=self.pixel_to_meter, camera_center = self.camera_center ,outline=True)
         
         font = pg.font.SysFont(None, 24)
