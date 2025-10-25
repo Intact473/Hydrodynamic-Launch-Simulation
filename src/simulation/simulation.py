@@ -16,8 +16,6 @@ class Simulation:
         )
 
         self.start_pos_y = 0.0
-        self.bg_image = pg.image.load("img/ohm.jpg").convert()
-        self.bg_image = pg.transform.scale(self.bg_image, (self.rect.width, self.rect.height))
         self.use_image_bg = True
         self.rocket_is_flying = False
         self.zoom_speed = 1.0 # zoom speed, 1 is slow
@@ -47,27 +45,33 @@ class Simulation:
         :param dt: Time delta in seconds since the last update
         """
         if self.rocket_is_flying:
-            posY = 0
-
             if int(self.time) >= len(self.results):
-                posY = 0
                 self.rocket_is_flying = False
                 print("Simulation ended")
-            else: 
-                posY = self.results[int(self.time)]['posY']
-            self.rocket.pos.y = self.start_pos_y - posY
+                return
 
+            posY = self.results[int(self.time)]['posY']
+            velocity = self.results[int(self.time)]['velocity']
+            self.rocket.pos.y = self.start_pos_y - posY
             target = self.rocket.pos - Vec2(0, 1.5)
             follow_strength = min(1.0, 0.08 + 0.35 * (target - self.camera_center).length())
             self.camera_center += (target - self.camera_center) * follow_strength
 
             d_between = abs(self.rocket.pos.y - self.start_pos_y)
-            max_zoom_in = 180.0
-            min_zoom_out = 30.0
-            new_calculated_zoom = max(min_zoom_out,min(max_zoom_in,max_zoom_in - self.zoom_speed * d_between)
-            )
-            self.pixel_to_meter += (new_calculated_zoom - self.pixel_to_meter) * 0.05
+            max_zoom_in, min_zoom_out = 180.0, 30.0
+            new_zoom = max(min_zoom_out, min(max_zoom_in, max_zoom_in - self.zoom_speed * d_between))
+            self.pixel_to_meter += (new_zoom - self.pixel_to_meter) * 0.05
             self.time += dt
+
+            current_angle = math.degrees(self.rocket.angle)
+            if velocity > 0:
+                target_angle = 90.0
+            else:
+                target_angle = 90.0 + min(abs(velocity) * 10.0, 180.0)
+            target_angle = min(target_angle, 270.0)
+            angular_response = min(0.002 + abs(velocity) * 0.015, 0.08)
+            new_angle = current_angle + (target_angle - current_angle) * angular_response
+            self.rocket.angle = math.radians(new_angle)
         
     def draw_axes(self, surface: pg.Surface, meters_to_px: float, camera_center: Vec2):
         width, height = surface.get_size()
@@ -99,12 +103,8 @@ class Simulation:
     
     def draw(self, screen: pg.Surface):
         sim_surface = screen.subsurface(self.rect)
-        sim_surface.blit(self.bg_image, (0, 0))
-        if not self.use_image_bg:
-            sim_surface.blit(self.bg_image, (0, 0))
-        else:
-            sim_surface.fill((0, 0, 0))
-            self.draw_axes(sim_surface, self.pixel_to_meter, self.camera_center)
+        sim_surface.fill((0, 0, 0))
+        self.draw_axes(sim_surface, self.pixel_to_meter, self.camera_center)
         self.rocket.draw(sim_surface, meters_to_px=self.pixel_to_meter, camera_center = self.camera_center ,outline=True)
         
         font = pg.font.SysFont(None, 24)

@@ -9,11 +9,12 @@ max_value = 0.0
 results = []
 
 def start(values:dict):
+    global results
     print("Simulation started")
     set_values(values)
-    global results
     results = calculateValues(plotValues = False)
-    print("theoretical max height: ", get_max_height(results))
+    print("max height: ", get_max_height(results))
+    print("max velocity: ", get_max_velocity(results))
     vw.get_sim().time = 0.0
         
 
@@ -42,6 +43,13 @@ def get_max_height(results) -> float:
         height = entry['posY']
         max_height = max(max_height, height)
     return max_height
+
+def get_max_velocity(results) -> float:
+    max_velocity = 0.0
+    for entry in results:
+        velocity = entry['velocity']
+        max_velocity = min(max_velocity, velocity)
+    return max_velocity
 
 def try_combinations(min_nozzle_mm: float, max_nozzle_mm: float, step_nozzle_mm: float, min_bottle_volume_l: float, max_bottle_volume_l: float, step_bottle_volume_l: float):
     thrust_values = np.arange(min_nozzle_mm, max_nozzle_mm + step_nozzle_mm, step_nozzle_mm)
@@ -268,4 +276,5 @@ def calculateValues(plotValues = False):
         plt.tight_layout(pad=0.3)
         plt.show()
 
+    #print(results)
     return results
