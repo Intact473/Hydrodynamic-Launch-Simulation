@@ -27,17 +27,11 @@ def stop():
     vw.get_sim().time = 0.0
 
 def set_values(values: dict):
-    """
-    Store GUI inputs (validation moved to calculateValues so try_combinations is validated too).
-    """
     print(values)
     global gui_input_values
     gui_input_values = values.copy()
 
 def calculate_thrust_nozzel_area(diameter_mm: float) -> float:
-    """
-    Calculate the area of the thrust nozzle in m^2 from the diameter in mm.
-    """
     radius_m = (diameter_mm / 1000) / 2
     nozzel_area = math.pi * (radius_m ** 2)
     return nozzel_area 
@@ -64,7 +58,6 @@ def try_combinations(min_nozzle_mm: float, max_nozzle_mm: float, step_nozzle_mm:
             max_heights[i, j] = get_max_height(results)
             print(f"Thrust Nozzle Diameter: {thrust} mm, Water Level: {water_level} l => Max Height: {max_heights[i, j]:.2f} m")
 
-    # Create contour plot with correct axes (smaller figsize)
     T, V = np.meshgrid(thrust_values, water_level_values)
     plt.figure(figsize=(7, 4.2))
     contour = plt.contourf(T, V, max_heights.T, levels=40, cmap='viridis')
@@ -75,41 +68,17 @@ def try_combinations(min_nozzle_mm: float, max_nozzle_mm: float, step_nozzle_mm:
     plt.tight_layout()
     plt.show()
 
-def get_max_value(value) -> float:
-    # Checke deine Funktion net deswegen mach ich meine eigene
-    """
-    Calculate the maximum value for the parameter
-    Parameters:
-        value: the current value, this could be height, velocity for example
-    """
-    global max_value
-    max_value = max(max_value, value)
-
-    return max_value
-
-# Replace Air_volume: use total_volume - water_volume with failsafe
 def Air_volume(total_volume, water_volume):
-	"""
-	Current air volume = total_volume - water_volume (both in m^3).
-	Ensure non-negative.
-	"""
-	return max(total_volume - water_volume, 0.0)
+    return max(total_volume - water_volume, 0.0)
 
-# Pressure: guard against zero/negative V to avoid division by zero
 def Pressure(P_0, V_0, V, kappa_gas):
-	if V <= 0:
-		# fallback: no compression calculation possible, return ambient-like fallback to avoid blowup
-		return P_0
-	return P_0 * (V_0 / V) ** kappa_gas
+    if V <= 0:
+        return P_0
+    return P_0 * (V_0 / V) ** kappa_gas
 
-# Ejection_velocity: avoid math domain errors, return 0 when not physically valid
 def Ejection_velocity(pressure, density_water, P_atm):
-    """
-    Calculate the ejection velocity of water using the formula:
-    v = sqrt(2 * (p - p_atm) / rho)
-    """
     if pressure <= P_atm or density_water <= 0:
-        return 0.0  # Return 0 if pressure is less than or equal to atmospheric pressure or density is invalid
+        return 0.0
     return math.sqrt(2 * (pressure - P_atm) / density_water)
 
 def Mass_flow(density_water, ejection_velocity, nozzle_area):
@@ -119,63 +88,36 @@ def Thrust(mass_flow, ejection_velocity):
     return mass_flow * ejection_velocity
 
 def Air_Resistance(diameter_rocket, velocity):
-    # assuming rocket is a cylinder
-    C_w = 1  # drag
-    rho_air = 1.225  # kg/m^3
+    C_w = 1
+    rho_air = 1.225
     radius_rocket = diameter_rocket / 2
     cross_section_area = math.pi * (radius_rocket ** 2)
     return 0.5 * C_w * rho_air * cross_section_area * velocity * abs(velocity)
 
 def Gravity_force(mass):
-    g = 9.81  # m/s^2
+    g = 9.81
     return mass * g
 
 def calculateValues(plotValues = False):
-    """
-    Simulate from t=0 to end_time in 1ms steps and return a list of dicts with:
-      - time (s)
-      - thrust (N)
-      - total_mass (kg)
-      - pressure (Pa)
-      - fill_level (m^3)  # remaining water volume
-      - ejection_velocity (m/s)
-      - air_volume (m^3)
-
-    Expects relevant keys in gui_input_values (if missing, defaults are used):
-      - pressure: initial pressure in bar (default 3.0)
-      - bottle_volume: total bottle volume in liters (default 1.0)
-      - water_volume: initial water volume in liters (default 1.0)
-      - empty_rocket_weight: kg (default 1.0)
-      - thrust_nozzle_diameter: mm (default 20.0)
-      - kappa_gas: ratio (default 1.4)
-      - density_water: kg/m^3 (default 1000)
-      - P_atm: Pa (default 101325)
-      - endTime: seconds (used if end_time param omitted; default 5.0)
-    """
     global gui_input_values
 
-    # defaults and read inputs
     defaults = {
-        "pressure": 0,               # bar
-        "bottle_volume": 0,          # liters (total bottle volume)
-        "water_level_rocket": 0,     # liters (initial water volume)
-        "empty_rocket_weight": 0,    # kg
-        "thrust_nozzle_diameter": 0, # mm
+        "pressure": 0,
+        "bottle_volume": 0,
+        "water_level_rocket": 0,
+        "empty_rocket_weight": 0,
+        "thrust_nozzle_diameter": 0,
         "kappa_gas": 1.4,
-        "density_water": 997.0,      # kg/m^3
-        "P_atm": 101325.0,           # Pa
-        "diameter_rocket": 0.10,     # m 
-        "endTime": 5.0               # seconds
+        "density_water": 997.0,
+        "P_atm": 101325.0,
+        "diameter_rocket": 0.10,
+        "endTime": 5.0
     }
 
-    # merge provided values with defaults
     inputs = defaults.copy()
     inputs.update(gui_input_values or {})
 
-    # --- input validation (performed BEFORE unit conversion) ---
-    # ensure numeric types where possible
     try:
-        # these keys expected from GUI (in liters / user units)
         bottle_vol = float(inputs.get("bottle_volume", 0))
         water_lvl = float(inputs.get("water_level_rocket", 0))
         pressure_bar = float(inputs.get("pressure", 0))
@@ -212,7 +154,6 @@ def calculateValues(plotValues = False):
     if end_time < 0:
         raise ValueError("endTime cannot be negative (s).")
 
-    # update validated (ensures proper numeric types in inputs)
     inputs["bottle_volume"] = bottle_vol
     inputs["water_level_rocket"] = water_lvl
     inputs["pressure"] = pressure_bar
@@ -223,20 +164,17 @@ def calculateValues(plotValues = False):
     inputs["P_atm"] = P_atm_val
     inputs["diameter_rocket"] = diam_rocket
     inputs["endTime"] = end_time
-    # --- end validation ---
 
-    # convert units
-    inputs["pressure"] *= 1e5  # bar to Pa
-    inputs["water_level_rocket"] *= 1e-3  # liters to m^3
-    inputs["bottle_volume"] *= 1e-3  # liters to m^3 
+    inputs["pressure"] *= 1e5
+    inputs["water_level_rocket"] *= 1e-3
+    inputs["bottle_volume"] *= 1e-3
     print("inputs: ", inputs)
 
     results = []
 
-    dt = 0.001  # 1 ms
+    dt = 0.001
     steps = int(max(0.0, inputs["endTime"]) / dt) + 1
 
-    # Store initial values at t=0
     results.append({
         "time": 0.0,
         "air_volume": (air_volume0 := max(inputs["bottle_volume"] - inputs["water_level_rocket"], 0.0)),
@@ -252,20 +190,17 @@ def calculateValues(plotValues = False):
         "posY": 0.0,
         "water_level": inputs["water_level_rocket"],
         "total_mass": total_mass0,
-        "added_volume": air_volume0 + inputs["water_level_rocket"],  # Ensure it matches bottle_volume
+        "added_volume": air_volume0 + inputs["water_level_rocket"],
     })
 
     for(step) in range(1, steps):
         time = step * dt
-        # get last values
         last = results[-1]
 
         if last["posY"] <= 0.0 and step > 4:
-            # Rocket has landed, stop simulation
             break
 
         if last["water_level"] <= 0.0:
-            # No water left, thrust is zero
             results.append({
                 "time": time,
                 "air_volume": last["air_volume"],
@@ -281,22 +216,16 @@ def calculateValues(plotValues = False):
                 "posY": max(0.0, last["posY"] + newVelocity * dt),
                 "water_level": 0.0,
                 "total_mass": total_mass,
-                "added_volume": last["air_volume"] + last["water_level"],  # Only air volume remains
+                "added_volume": last["air_volume"] + last["water_level"],
             })
             continue
 
-        else:   # water still in rocket
-            # Compute water depletion from previous mass_flow (based on last ejection velocity),
-            # then compute air_volume from total_volume - water_level, then update pressure/ejection/mass_flow.
+        else:
             results.append({
                 "time": time,
-                # previous mass flow (kg/s) used to compute volumetric outflow in this dt
                 "mass_flow_prev": (mass_flow_prev := Mass_flow(inputs["density_water"], last["ejection_velocity"], nozzle_area)),
-                # new water level (m^3)
                 "water_level": (water_level := max(0.0, last["water_level"] - (mass_flow_prev / inputs["density_water"]) * dt)),
-                # air volume computed from total bottle volume
                 "air_volume": (air_volume := Air_volume(inputs["bottle_volume"], water_level)),
-                # pressure using initial_air_volume as V_0
                 "pressure": (pressure := Pressure(inputs["pressure"], inputs["bottle_volume"] - inputs["water_level_rocket"], air_volume, inputs["kappa_gas"])),
                 "ejection_velocity": (ejection_velocity := Ejection_velocity(pressure, inputs["density_water"], inputs["P_atm"])),
                 "mass_flow": (mass_flow_rate := Mass_flow(inputs["density_water"], ejection_velocity, nozzle_area)),
@@ -308,26 +237,21 @@ def calculateValues(plotValues = False):
                 "velocity": last["velocity"] + acceleration * dt,
                 "posY": max(0.0, last["posY"] + last["velocity"] * dt),
                 "total_mass": total_mass,
-                "added_volume": air_volume + water_level,  # Ensure it matches bottle_volume
+                "added_volume": air_volume + water_level,
             })
         
 
-
-    # ---- plotting: separate plot for each variable ----
     if results and plotValues:
         times = [r["time"] for r in results]
 
-        # collect all keys except time, preserve insertion order from first result
         keys = [k for k in results[0].keys() if k != "time"]
 
-        # determine grid layout
         n_series = len(keys)
         if n_series == 0:
             return_results = results
         ncols = min(4, max(1, n_series))
         nrows = math.ceil(n_series / ncols)
 
-        # use smaller per-subplot size so full figure fits smaller screens
         fig, axes = plt.subplots(nrows=nrows, ncols=ncols, figsize=(3 * ncols, 2.2 * nrows))
         axes = np.array(axes).flatten()
 
@@ -338,12 +262,10 @@ def calculateValues(plotValues = False):
             ax.set_xlabel("time (s)")
             ax.grid(True)
 
-        # hide unused axes
         for ax in axes[len(keys):]:
             ax.set_visible(False)
 
         plt.tight_layout(pad=0.3)
         plt.show()
 
-    # print(results)
     return results
