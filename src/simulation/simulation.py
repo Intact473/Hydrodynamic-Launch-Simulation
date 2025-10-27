@@ -112,4 +112,4 @@ class Simulation:
         font = pg.font.SysFont(None, 24)
         #Please do not delete the line below, it might be useful when the rocket is falling down to the earth
         #sim_surface.blit(font.render(f"zoom: {self.pixel_to_meter:.1f}", True, (255,255,255)), (10, 30))
-        sim_surface.blit(font.render(f"rocket hight: {-(self.rocket.pos.y):.1f}", True, (255,255,255)), (10, 10))
+        sim_surface.blit(font.render(f"rocket height: {-(self.rocket.pos.y):.1f}", True, (255,255,255)), (10, 10))
