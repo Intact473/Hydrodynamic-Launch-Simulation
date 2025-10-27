@@ -59,7 +59,7 @@ class ControlPanel:
             return entry
 
         self.uinp_volumePET = add_labeled_entry("Volume PET [l]", "1.00")
-        self.uinp_pressure = add_labeled_entry("Pressure [bar]", "6.00")
+        self.uinp_pressure = add_labeled_entry("Pressure [bar]", "4.50")
         self.uinp_weight_empty_rocket = add_labeled_entry("Weight empty rocket [kg]", "0.18")
         self.uinp_thrust_nozzle_diameter = add_labeled_entry("Thrust nozzle d [mm]", "9")
         self.uinp_water_level_rocket = add_labeled_entry("water_level_rocket [l]", "0.40")
