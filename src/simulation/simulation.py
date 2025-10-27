@@ -67,7 +67,7 @@ class Simulation:
             if velocity > 0:
                 target_angle = 90.0
             else:
-                target_angle = 90.0 + min(abs(velocity) * 10.0, 180.0)
+                target_angle = 90.0 + min(abs(velocity) * 30.0, 180.0)
             target_angle = min(target_angle, 270.0)
             angular_response = min(0.002 + abs(velocity) * 0.015, 0.08)
             new_angle = current_angle + (target_angle - current_angle) * angular_response
