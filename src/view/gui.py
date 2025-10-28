@@ -63,7 +63,7 @@ class ControlPanel:
         self.uinp_weight_empty_rocket = add_labeled_entry("Weight empty rocket [kg]", "0.18")
         self.uinp_thrust_nozzle_diameter = add_labeled_entry("Thrust nozzle d [mm]", "9.00")
         self.uinp_water_level_rocket = add_labeled_entry("water_level_rocket [l]", "0.40")
-        self.uinp_cross_sectional_rocket = add_labeled_entry("Rocket diameter [m]", "0.05")
+        self.uinp_cross_sectional_rocket = add_labeled_entry("Rocket diameter [m]", "0.10")
 
 
         self.btn_start = gui.elements.UIButton(
