@@ -100,9 +100,6 @@ def Air_Resistance(diameter_rocket, velocity):
     rho_air = 1.225
     radius_rocket = diameter_rocket / 2
     cross_section_area = math.pi * (radius_rocket ** 2)
-    print("cross section: ", cross_section_area)
-    print("velocity: ", velocity)
-    print("air resistance: ", 0.5 * C_w * rho_air * cross_section_area * velocity * abs(velocity))
     return 0.5 * C_w * rho_air * cross_section_area * velocity * abs(velocity)
 
 def Gravity_force(mass):
