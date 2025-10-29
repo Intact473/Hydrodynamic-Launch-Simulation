@@ -9,13 +9,11 @@
 \title{Simulation einer Wasserrakete}
 \author{Simon Kerlin, Patrick Stempel \\[0.5em]
 Betreuer: Prof. Dr. Peter Jonas}
-% \date{\today} % Optional
+\date{\today} % Optional
 
 % ==========================
 \begin{document}
 % ==========================
-
-% Kein \onehalfspacing oder \setlength{\parskip} nötig, da von Klasse gesetzt
 
 \maketitle % Titel ausgeben
 
@@ -27,19 +25,22 @@ Der Körper einer Wasserrakete besteht typischerweise aus einer stabilen Kunstst
 Anschließend wird die übrige Luft in der Flasche unter Druck gesetzt.
 Die Flasche dient als Druckbehälter und gleichzeitig als Raketenkörper.
 
+\textcolor{red}{Ablauf des Starts der Rakete, muss noch geprüft werden:}
+\newline
 \textcolor{lightgray}{Vor dem Start wird die Rakete auf eine Startrampe gesetzt und mit einer Düse verschlossen. Über ein Ventil wird Luft in die Flasche gepumpt, wodurch sich der Druck im Inneren erhöht. Das Wasser fungiert als Reaktionsmasse.}
 \textcolor{lightgray}{Beim Auslösen des Starts öffnet sich die Düse, und das unter Druck stehende Wasser wird mit hoher Geschwindigkeit nach hinten ausgestoßen. Nach dem Rückstoßprinzip (3. Newtonsches Gesetz) erfährt die Rakete eine entgegengesetzte Beschleunigung und hebt ab.}
 
 Die Flugbahn der Rakete wird durch verschiedene Faktoren beeinflusst:
 \begin{itemize}
+    \item Leergewicht der Rakete
     \item Füllmenge des Wassers
     \item Luftdruck im Inneren
     \item Düsengröße
     \item Aerodynamik des Raketenkörpers
-    \item Umgebungsbedingungen (Wind, Luftwiderstand)
 \end{itemize}
 
-Nachdem das gesamte Wasser ausgestoßen ist, fliegt die Rakete im freien Fall weiter, bis sie schließlich wieder zu Boden sinkt. Ein Fallschirm kann zur sicheren Landung beitragen.
+Nachdem das gesamte Wasser ausgestoßen ist, fliegt die Rakete im freien Fall weiter, bis sie schließlich wieder am Boden aufschlägt. 
+Ein Fallschirm kann zur sicheren Landung beitragen, diesen haben wir jedoch nicht in unsere Simulation integriert.
 
 \section{Mathematisch-Physikalisches Modell}
 Ein Beispiel für eine Gleichung:
