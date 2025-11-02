@@ -25,7 +25,7 @@ Der Körper einer Wasserrakete besteht typischerweise aus einer stabilen Kunstst
 Anschließend wird die übrige Luft in der Flasche unter Druck gesetzt.
 Die Flasche dient als Druckbehälter und gleichzeitig als Raketenkörper.
 
-\textcolor{red}{Ablauf des Starts der Rakete, muss noch geprüft werden:}
+\textcolor{red}{Ablauf des Starts, muss noch geprüft werden:}
 \newline
 \textcolor{lightgray}{Vor dem Start wird die Rakete auf eine Startrampe gesetzt und mit einer Düse verschlossen. Über ein Ventil wird Luft in die Flasche gepumpt, wodurch sich der Druck im Inneren erhöht. Das Wasser fungiert als Reaktionsmasse.}
 \textcolor{lightgray}{Beim Auslösen des Starts öffnet sich die Düse, und das unter Druck stehende Wasser wird mit hoher Geschwindigkeit nach hinten ausgestoßen. Nach dem Rückstoßprinzip (3. Newtonsches Gesetz) erfährt die Rakete eine entgegengesetzte Beschleunigung und hebt ab.}
@@ -43,12 +43,60 @@ Nachdem das gesamte Wasser ausgestoßen ist, fliegt die Rakete im freien Fall we
 Ein Fallschirm kann zur sicheren Landung beitragen, diesen haben wir jedoch nicht in unsere Simulation integriert.
 
 \section{Mathematisch-Physikalisches Modell}
-Ein Beispiel für eine Gleichung:
+Die Bewegung der Wasserrakete wird durch verschiedene physikalische Prozesse bestimmt. Im Folgenden werden die wichtigsten Gleichungen aufgeführt:
+
+\subsection{Druckentwicklung}
+Das Volumen der Luft in der Flasche ändert sich während des Ausstoßes des Wassers, wofür zwei verschieden Gleichungen in Frage kommen:
+\begin{itemize}   
+    \item Die isotherme Zustandsänderung (\(\Delta T = 0\)):
+    \begin{equation}p_0 V_0 = p_1 V_1\end{equation}
+    \item und die adiabatische Zustandsänderung (\(\Delta Q = 0\)) :
+    \begin{equation}p_0 V_0^\kappa = p_1 V_1^\kappa        \label{eq:adiabatisch}
+\end{equation}
+\end{itemize}
+Wir haben uns für die adiabatische Zustandsänderung~\eqref{eq:adiabatisch} entschieden, da der Druckabfall in der kurzen Zeit des Ausstoßes schneller erfolgt als der Wärmeaustausch mit der Umgebung.
+Dabei ist $P_0$ der Anfangsdruck, $V_0$ das Anfangsvolumen der Luft, $V$ das aktuelle Luftvolumen und $\kappa$ der Adiabatenexponent (für Luft $\kappa \approx 1{,}4$).
+
+\subsection{Ausstoßgeschwindigkeit des Wassers}
+Die Geschwindigkeit, mit der das Wasser durch die Düse ausgestoßen wird, ergibt sich aus der Bernoulli-Gleichung:
 \begin{equation}
-E = mc^2
+v_\text{A} = \sqrt{ \frac{2 (P - P_\text{atm})}{\rho_\text{Wasser}} }
+\end{equation}
+$P_\text{atm}$ ist der Umgebungsdruck und $\rho_\text{Wasser}$ die Dichte des Wassers.
+
+\subsection{Massenstrom}
+Der Massenstrom des ausgestoßenen Wassers berechnet sich zu:
+\begin{equation}
+\dot{m} = \rho_\text{Wasser} \cdot v_\text{A} \cdot A_\text{Düse}
+\end{equation}
+$A_\text{Düse}$ ist die Querschnittsfläche der Düse.
+
+\subsection{Schubkraft}
+Die Schubkraft, die auf die Rakete wirkt, ist:
+\begin{equation}
+F_\text{Schub} = \dot{m} \cdot v_\text{A}
 \end{equation}
 
-Oder inline wie \( a^2 + b^2 = c^2 \).
+\subsection{Kräftebilanz und Bewegung}
+Die Rakete erfährt neben dem Schub auch Luftwiderstand und Gewichtskraft:
+\begin{equation}
+F_\text{gesamt} = F_\text{Schub} - F_\text{Luftwiderstand} - F_\text{Gewicht}
+\end{equation}
+Der Luftwiderstand wird mit folgender Formel abgeschätzt:
+\begin{equation}
+F_\text{Luftwiderstand} = \frac{1}{2} C_w \rho_\text{Luft} A_\text{Quer} v^2
+\end{equation}
+Die Bewegungsgleichung lautet:
+\begin{equation}
+a = \frac{F_\text{gesamt}}{m_\text{Rakete}}
+\end{equation}
+Die Geschwindigkeit und Höhe werden numerisch integriert.
+
+\subsection{Phasen des Fluges}
+\begin{itemize}
+    \item \textbf{Schubphase:} Solange Wasser ausgestoßen wird, erfährt die Rakete Schub.
+    \item \textbf{Freiflugphase:} Nach Ausstoß des gesamten Wassers bewegt sich die Rakete nur noch unter Einfluss von Luftwiderstand und Schwerkraft.
+\end{itemize}
 
 \section{Implementierung des Modells}
 \subsection{Numerische Methoden}
