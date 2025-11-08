@@ -144,7 +144,7 @@ def Pressure(P_0, V_0, V, kappa_gas):
         P_0 (float): Anfangsdruck [Pa]
         V_0 (float): Anfangsvolumen [m^3]
         V (float): aktuelles Volumen [m^3]
-        kappa_gas (float): Adiabatenexponent [dimensionslos]
+        kappa_gas (float): Adiabatenexponent [einheitslos]
 
     Returns:
         float: Druck [Pa]
@@ -247,10 +247,7 @@ def calculateValues(plotValues=False):
     """
     # Inputs und Einheitenumrechnung
     defaults = {
-        "pressure": 0, "bottle_volume": 0, "water_level_rocket": 0,
-        "empty_rocket_weight": 0, "thrust_nozzle_diameter": 0,
-        "kappa_gas": 1.4, "density_water": 1000.0, "P_atm": 101325.0,
-        "diameter_rocket": 0.10, "endTime": 5.0
+        "kappa_gas": 1.4, "density_water": 1000.0, "P_atm": 101325.0, "endTime": 5.0
     }
     inputs = {**defaults, **(gui_input_values or {})}
     try:
