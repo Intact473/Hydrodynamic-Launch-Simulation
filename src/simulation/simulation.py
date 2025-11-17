@@ -26,6 +26,9 @@ class Simulation:
         self.use_image_bg = not self.use_image_bg
 
     def place_rocket_bottom_center(self, margin_px):
+        """Place the rocket at the bottom center of the simulation area
+        :param margin_px: Margin from the bottom in pixels
+        """
         pixel_to_meter = self.pixel_to_meter
         nozzle_h_px = max(2, int(0.55 * self.rocket.nozzle_d * pixel_to_meter))
         start_pos_screen_x = self.rect.width // 2
@@ -76,6 +79,12 @@ class Simulation:
             self.pixel_to_meter = 150.0
         
     def draw_axes(self, surface: pg.Surface, meters_to_px: float, camera_center: Vec2):
+        """
+        Draw horizontal axes lines on the simulation surface
+        :param surface: The pygame surface to draw on
+        :param meters_to_px: Conversion factor from meters to pixels
+        :param camera_center: The center of the camera in world coordinates
+        """
         width, height = surface.get_size()
         center_x = width // 2
         center_y = height // 2
@@ -104,6 +113,9 @@ class Simulation:
 
     
     def draw(self, screen: pg.Surface):
+        """Draw the entire simulation onto the given screen surface
+        :param screen: The pygame surface representing the screen
+        """
         sim_surface = screen.subsurface(self.rect)
         sim_surface.fill((0, 0, 0))
         self.draw_axes(sim_surface, self.pixel_to_meter, self.camera_center)
