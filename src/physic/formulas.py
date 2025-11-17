@@ -396,6 +396,23 @@ def calculateValues(plotValues=False):
     # Plot falls gewünscht
     if results and plotValues:
         times = [r["time"] for r in results]
+        # Mapping von Schlüssel zu Einheiten
+        units = {
+            "posY": "[m]",
+            "velocity": "[m/s]",
+            "acceleration": "[m/s²]",
+            "thrust": "[N]",
+            "air_resistance": "[N]",
+            "gravity_force": "[N]",
+            "pressure": "[Pa]",
+            "water_level": "[m³]",
+            "air_volume": "[m³]",
+            "total_mass": "[kg]",
+            "mass_flow": "[kg/s]",
+            "ejection_velocity": "[m/s]",
+            "mass_flow_prev": "[kg/s]",
+            "total_force": "[N]",
+        }
         keys = [k for k in results[0].keys() if k != "time"]
         ncols = min(4, max(1, len(keys)))
         nrows = int(np.ceil(len(keys) / ncols))
@@ -403,7 +420,8 @@ def calculateValues(plotValues=False):
         axes = np.array(axes).flatten()
         for ax, key in zip(axes, keys):
             ax.plot(times, [r.get(key, 0.0) for r in results], linewidth=1)
-            ax.set_title(str(key))
+            unit = units.get(key, "")
+            ax.set_title(f"{key} {unit}".strip())
             ax.set_xlabel("time (s)")
             ax.grid(True)
         for ax in axes[len(keys):]:
