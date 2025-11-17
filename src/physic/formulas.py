@@ -15,7 +15,7 @@ def start(values:dict):
     """
     global results
     set_values(values)
-    results = calculateValues(plotValues=True)
+    results = calculateValues(plotValues=False)
     print("max height:", get_max_height(results))
     print("max velocity:", get_max_velocity(results))
     vw.get_sim().time = 0.0
@@ -64,7 +64,7 @@ def get_max_height(results) -> float:
 
 def get_max_velocity(results) -> float:
     """
-    Gibt die maximale Geschwindigkeit aus der Ergebnisliste zurück.
+    Gibt die Auftreffgeschwindigkeit aus der Ergebnisliste zurück.
 
     Args:
         results (list): Liste von dicts mit Schlüssel 'velocity' [m/s]
@@ -72,7 +72,7 @@ def get_max_velocity(results) -> float:
     Returns:
         float: Maximale Geschwindigkeit [m/s]
     """
-    return max((abs(entry['velocity']) for entry in results), default=0.0)
+    return results[-1]['velocity'] if results else 0.0
 
 def try_combinations(min_nozzle_mm, max_nozzle_mm, step_nozzle_mm, min_bottle_volume_l, max_bottle_volume_l, step_bottle_volume_l):
     """
@@ -138,7 +138,7 @@ def Air_volume(total_volume, water_volume):
 
 def Pressure(P_0, V_0, V, kappa_gas):
     """
-    Berechnet den aktuellen Druck in der Flasche.
+    Berechnet die Druckentwicklung in der Flasche.
 
     Args:
         P_0 (float): Anfangsdruck [Pa]
@@ -245,10 +245,10 @@ def calculateValues(plotValues=False):
                 total_mass [kg]
                 usw.
     """
-    # Inputs und Einheitenumrechnung
     defaults = {
         "kappa_gas": 1.4, "density_water": 1000.0, "P_atm": 101325.0, "endTime": 5.0
     }
+    # Eingabewerte sammeln bzw. kombinieren
     inputs = {**defaults, **(gui_input_values or {})}
     try:
         bottle_vol = float(inputs["bottle_volume"])
@@ -264,7 +264,7 @@ def calculateValues(plotValues=False):
     except Exception:
         raise ValueError("One or more inputs are not numeric.")
 
-    # Validierung der Eingaben
+    # Validierung der Eingaben mit passender Fehlermeldung
     if bottle_vol <= 0:
         raise ValueError("bottle_volume must be > 0 (liters).")
     if water_lvl < 0:
@@ -303,8 +303,9 @@ def calculateValues(plotValues=False):
     })
 
     results = []
-    dt = 0.001
+    dt = 0.001  # 1 ms timestep
     steps = int(end_time / dt) + 1
+    # Berechnung der Werte für den initialen Zustand (Randbedingungen)
     nozzle_area = Thrust_nozzle_area(inputs["thrust_nozzle_diameter"])
     total_mass0 = inputs["empty_rocket_weight"] + inputs["density_water"] * inputs["water_level_rocket"]
     air_volume0 = max(inputs["bottle_volume"] - inputs["water_level_rocket"], 0.0)
@@ -315,7 +316,6 @@ def calculateValues(plotValues=False):
     gravity_force0 = Gravity_force(total_mass0)
     accel0 = (thrust0 - gravity_force0) / total_mass0 if total_mass0 > 0 else 0.0
 
-    # Initialer Zustand
     results.append({
         "time": 0.0,
         "air_volume": air_volume0,
@@ -338,7 +338,7 @@ def calculateValues(plotValues=False):
         time = step * dt
         last = results[-1]
         if last["posY"] <= 0.0 and step > 4:
-            break
+            break # Abbruch wenn Rakete wieder am Boden ist (step > 4 willkürlich gewählt, damit Anfangsposition ausgenommen wird)
         if last["water_level"] <= 0.0:
             total_mass = inputs["empty_rocket_weight"]
             air_resistance = Air_Resistance(inputs["diameter_rocket"], last["velocity"])

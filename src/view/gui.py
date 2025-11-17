@@ -109,7 +109,7 @@ class ControlPanel:
             output.rebuild() 
             cursor_y += input_h + gap
             return output
-        self.out_max_velocity = add_output_field("Max velocity [m/s]")
+        self.out_max_velocity = add_output_field("Impact velocity [m/s]")
         self.out_max_height = add_output_field("Max height [m]")
 
 
