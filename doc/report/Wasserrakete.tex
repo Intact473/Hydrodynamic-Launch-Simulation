@@ -21,7 +21,7 @@ Betreuer: Prof. Dr. Peter Jonas}
 \newpage
 
 \section{Funktionsweise einer Wasserrakete}
-Der Körper einer Wasserrakete besteht typischerweise aus einer stabilen Kunststoffflasche (z.B. 1 Liter Fanta-Flasche), die teilweise mit Wasser gefüllt wird (siehe Abbildung~\ref{fig:wasserrakete}). 
+Der Körper einer Wasserrakete besteht typischerweise aus einer stabilen Kunststoffflasche (z.B. 1-Liter-Fanta-Flasche), die teilweise mit Wasser gefüllt wird (siehe Abbildung~\ref{fig:wasserrakete}). 
 Anschließend wird die übrige Luft in der Flasche unter Druck gesetzt.
 Die Flasche dient als Druckbehälter und gleichzeitig als Raketenkörper.
 Die Öffnung der Flasche dient als Düse, hier wird also das Wasser durch die mit Überdruck versetzte Luft ausgestoßen.
@@ -60,7 +60,7 @@ Beispielsweise werden Effekte wie Turbulenzen und komplexe Strömungsdynamiken v
 Im Folgenden werden die Gleichungen aufgeführt, die in unserem Modell verwendet werden.
 
 \subsection{Druckentwicklung}
-Das Volumen der Luft in der Flasche ändert sich während des Ausstoßes des Wassers, wofür zwei verschieden Gleichungen in Frage kommen:
+Das Volumen der Luft in der Flasche ändert sich während des Ausstoßes des Wassers, wofür zwei verschiedene Gleichungen in Frage kommen:
 
 \begin{itemize}   
     \item Die isotherme Zustandsänderung (\(\Delta T = 0\)):
@@ -242,11 +242,11 @@ Hierbei lässt sich erkennen, dass ein Füllstand von ca. \(0{,}45\,\mathrm{l}\)
     \label{fig:konturplot}
 \end{figure}
 
-Bei größeren Düsendurchmessern sind im Plot ~\ref{fig:konturplot} numerische Ungenauigkeiten erkennbar.
+Bei größeren Düsendurchmessern sind im Plot~\ref{fig:konturplot} numerische Ungenauigkeiten erkennbar.
 Das liegt daran, dass hier das Wasser sehr schnell ausgestoßen wird, was eine sehr kurze Schubphase zur Folge hat. 
 Diese kann über eine Schrittweite von \(\Delta t = 1\,\mathrm{ms}\) nicht genau abgebildet werden.
 
-Um dieses Problem zu lösen, haben wir den Konturplot ~\ref{fig:konturplot_genauer} mit einer Schrittweite von \(\Delta t = 0{,}2\,\mathrm{ms}\) erstellt.
+Um dieses Problem zu lösen, haben wir den Konturplot~\ref{fig:konturplot_genauer} mit einer Schrittweite von \(\Delta t = 0{,}2\,\mathrm{ms}\) erstellt.
 Hier sind die numerischen Ungenauigkeiten deutlich reduziert und die erreichte Höhe wird auch minimal kleiner.
 \begin{figure}[H]
     \centering
@@ -259,8 +259,17 @@ Hier sind die numerischen Ungenauigkeiten deutlich reduziert und die erreichte H
 \textcolor{red}{Falls wir eine Rakete bauen: (Frage der Messung?) $\Rightarrow$ Evtl weglassen}
 
 \section{Diskussion}
-Folgeuntersuchungen, Schwachstellen des Modells
-(z.B keine Turbulenzen, kein Wind, kein Fallschirm, Abschusswinkel nur 90°, etc.)
+Obwohl das Modell eine sehr nahe Abbildung der Realität liefert, gibt es noch Verbesserungspotenzial.
+Beispielsweise könnten Turbulenzen beim Ausstoß des Wassers berücksichtig werden, beziehungsweise generell eine genauere Strömungsdynamik verwendet werden.
+Auch der Luftwiderstandskoeffizient \(C_d\) könnte experimentell bestimmt werden, um eine genauere Simulation zu ermöglichen.
+
+Darüber hinaus könnte man das Modell mit verschiedenen anderen Umwelteinflüssen erweitern.
+Dazu gehören zum Beispiel: 
+\begin{itemize}
+    \item (seitlicher) Wind
+    \item variabler Abschusswinkel
+    \item Fallschirm bei Landung
+\end{itemize}
 
 \listoffigures
 
