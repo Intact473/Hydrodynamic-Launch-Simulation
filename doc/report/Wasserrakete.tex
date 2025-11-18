@@ -168,6 +168,8 @@ Berechne \(h\) an der nächsten Stelle \(t_1 = t_0 + \Delta t\) (lineare Approxi
     h(t_1) \approx h(t_0) + \dot h(t_0) \cdot \Delta t 
 \end{equation*}
 
+Bei unserer Simulation haben wir uns für ein Zeitintervall von \(\Delta t = 1\,\mathrm{ms}\) entschieden, um eine gute Balance zwischen Genauigkeit und Rechenzeit zu gewährleisten.
+
 \subsection{Aufbau des Programms}
 
 \textcolor{red}{Für Patrick :), sag einfach wo ich dann formulas.py erklären soll}
@@ -212,7 +214,7 @@ Kurz davor erreicht die Rakete ihre maximale Beschleunigung von ca. \(110\,\math
 
 Danach befindet sich die Rakete im freien Fall, wobei Luftwiderstand und Gewichtskraft die Bewegung beeinflussen. 
 Da die Rakete immernoch eine Geschwindigkeit nach oben besitzt, steigt sie noch weiter. Nach ca. \(2\,\mathrm{s}\) erreicht sie ihre maximale Höhe von \(21{,}05\,\mathrm{m}\) und beginnt den Abgang.
-Nun geht die Geschwindigkeit der Rakete in den negativen Bereich über, bis sie nach ca. \(4{,}3\,\mathrm{s}\) schließlich wieder auf dem Boden auftrifft.
+Nun geht die Geschwindigkeit der Rakete in den negativen Bereich über, bis sie nach ca. \(4{,}3\,\mathrm{s}\) schließlich wieder mit \(15{,}75\,\mathrm{m/s}\) (\texttt{velocity}) auf den Boden auftrifft.
 
 \begin{figure}[H]
     \centering
@@ -220,21 +222,52 @@ Nun geht die Geschwindigkeit der Rakete in den negativen Bereich über, bis sie 
     \caption{Relevante Größen der Rakete über die Zeit für Standard-Parameter.}
     \label{fig:simulation_plot}
 \end{figure}
-\subsection{Optimaler Füllstand und Düsengröße}
+\subsection{Optimaler Wasserfüllstand und Düsendurchmesser}
+Um eine Beziehung zwischen Füllstand, Düsengröße und maximaler Höhe herzustellen, haben wir verschiedene Simulationen mit unterschiedlichen Parametern durchgeführt.
+Dabei haben wir folgende Wertebereiche verwendet:
+
+\begin{itemize}
+    \item Wasserfüllstand: von $0{,}1\,\mathrm{l}$ bis $1{,}0\,\mathrm{l}$ in Schritten von $0{,}025\,\mathrm{l}$
+    \item Düsendurchmesser: von $1{,}0\,\mathrm{mm}$ bis $40{,}0\,\mathrm{mm}$ in Schritten von $1{,}0\,\mathrm{mm}$
+\end{itemize}
+
+Alle anderen Parameter wurden gemäß Tabelle~\ref{tab:standardparameter} konstant gehalten.
+
+Es ergab sich der Konturplot in Abbildung~\ref{fig:konturplot}. 
+Hierbei lässt sich erkennen, dass ein Füllstand von ca. \(0{,}45\,\mathrm{l}\) mit einem Düsendurchmesser ab \(d_\text{nozzle} \geq 7{,}5 \,\mathrm{mm}\) die maximale Höhe von ca. \(21-23\,\mathrm{m}\) erreicht.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{Contour_Plot_1ms.png}
+    \caption{Maximale Höhe der Rakete in Abhängigkeit von Wasserfüllstand und Düsendurchmesser. (\(\Delta t = 1\, \mathrm{ms}\))}
+    \label{fig:konturplot}
+\end{figure}
+
+Bei größeren Düsendurchmessern sind im Plot ~\ref{fig:konturplot} numerische Ungenauigkeiten erkennbar.
+Das liegt daran, dass hier das Wasser sehr schnell ausgestoßen wird, was eine sehr kurze Schubphase zur Folge hat. 
+Diese kann über eine Schrittweite von \(\Delta t = 1\,\mathrm{ms}\) nicht genau abgebildet werden.
+
+Um dieses Problem zu lösen, haben wir den Konturplot ~\ref{fig:konturplot_genauer} mit einer Schrittweite von \(\Delta t = 0{,}2\,\mathrm{ms}\) erstellt.
+Hier sind die numerischen Ungenauigkeiten deutlich reduziert und die erreichte Höhe wird auch minimal kleiner.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{Contour_Plot_02ms.png}
+    \caption{Maximale Höhe der Rakete in Abhängigkeit von Wasserfüllstand und Düsendurchmesser. (\(\Delta t = 0{,}2\, \mathrm{ms}\))}
+    \label{fig:konturplot_genauer}
+\end{figure}
 
 \subsection{Vergleich mit der Realität}
+\textcolor{red}{Falls wir eine Rakete bauen: (Frage der Messung?) $\Rightarrow$ Evtl weglassen}
 
 \section{Diskussion}
 Folgeuntersuchungen, Schwachstellen des Modells
 (z.B keine Turbulenzen, kein Wind, kein Fallschirm, Abschusswinkel nur 90°, etc.)
 
-\section{Bilder}
-\begin{figure}[h!]
-    \centering
-    % \includegraphics[width=0.5\textwidth]{beispielbild.png}
-    \caption{Ein Beispielbild.}
-    \label{fig:beispiel}
-\end{figure}
+\listoffigures
+
+\begin{thebibliography}{9}
+    \bibitem{raketenbuch}
+    Autor, \emph{Titel}, 1. Auflage, Verlag, Jahr.
+\end{thebibliography}
 
 
 % ==========================
