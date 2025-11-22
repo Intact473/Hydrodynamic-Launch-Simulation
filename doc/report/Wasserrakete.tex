@@ -232,8 +232,85 @@ die Simulation setzt diese Kräfte in Bewegung der Rakete um.
 
 \textcolor{red}{Für Simon check mal ob es passt}
 \section{Benutzerhandbuch für das Programm}
-Erklärung der GUI und der verschiedenen Buttons
-\newline \textcolor{red}{Auch für Patrick :)}
+
+Die grafische Benutzeroberfläche der Simulation ist in zwei Bereiche
+unterteilt: links befindet sich das Einstellungsmenü, rechts wird die
+Rakete in der Simulationsumgebung dargestellt (siehe Abbildung~\ref{fig:gui}).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{Simtools_gui.png}
+    \caption{Grafische Benutzeroberfläche der Wasserraketen-Simulation.}
+    \label{fig:gui}
+\end{figure}
+
+\subsection{Eingabefelder}
+Im linken Bereich befinden sich sämtliche Parameter, welche die Rakete
+und ihre Umgebung definieren. Alle Werte können vor dem Start der
+Simulation frei angepasst werden.
+
+\begin{itemize}
+    \item \textbf{Volume PET [l]}  
+          Gesamtvolumen der PET-Flasche, also des Druckbehälters.
+    \item \textbf{Pressure [bar]}  
+          Anfangsdruck der eingeschlossenen Luft vor dem Start.
+    \item \textbf{Weight empty rocket [kg]}  
+          Leergewicht der Rakete ohne Wasser.
+    \item \textbf{Thrust nozzle d [mm]}  
+          Durchmesser der Düse, durch die Wasser ausgestoßen wird.
+    \item \textbf{water\_level\_rocket [l]}  
+          Anfangsfüllmenge des Wassers in der Rakete.
+    \item \textbf{Rocket diameter [m]}  
+          Außendurchmesser der Rakete, relevant für Luftwiderstand.
+\end{itemize}
+
+Die Eingabefelder erwarten jeweils physikalisch sinnvolle Werte.
+Ungültige oder fehlende Eingaben verhindern den Start der Simulation.
+
+\subsection{Buttons}
+
+\begin{itemize}
+    \item \textbf{Start}  
+          Beginnt die Simulation. Die eingegebenen Parameter werden in
+          einem \texttt{values}-Dictionary gesammelt und an die 
+          Simulationslogik übergeben. Anschließend wird die Rakete in Echtzeit animiert.
+          
+    \item \textbf{Reset}  
+          Setzt die Ansicht und alle Anzeigen zurück. Die Eingabewerte
+          bleiben unverändert, die Rakete wird auf Bodenhöhe positioniert.
+
+    \item \textbf{Show Contour plot}  
+          Erzeugt einen Konturplot, der die maximale Höhe der Rakete
+          in Abhängigkeit von Düsendurchmesser und Wasserfüllstand zeigt.
+          Dazu werden die aktuellen Eingabewerte verwendet.
+\end{itemize}
+
+\subsection{Ausgabeparameter}
+
+Unterhalb der Buttons befinden sich zwei automatisch gefüllte Felder:
+
+\begin{itemize}
+    \item \textbf{Impact velocity [m/s]}  
+          Geschwindigkeit der Rakete beim Aufprall (Endgeschwindigkeit).
+
+    \item \textbf{Max height [m]}  
+          Erreichte maximale Höhe gegenüber dem Boden.
+\end{itemize}
+
+Diese Werte werden erst nach Abschluss der Simulation ausgegeben und
+beruhen auf den physikalischen Berechnungen des Moduls
+\texttt{formulas.py}.
+
+\subsection{Simulationsanzeige}
+
+Der rechte Bereich des Programms zeigt die Rakete in einer schematischen
+Darstellung. Zusätzlich sind horizontale Hilfslinien in Meterabständen
+eingeblendet, um die Höhe der Rakete besser ablesen zu können. Der rote
+Boden markiert die Start- und Aufprallposition.
+
+Während der Simulation aktualisieren sich Höhe, Geschwindigkeit und
+Rotation der Rakete in Echtzeit.
+\newline \textcolor{red}{Für Simon: Checks mal}
 \section{Simulationsergebnisse}
 Um die Simulationsergebnisse auswerten zu können, mussten wir uns zuerst überlegen, an welcher Stelle der Rakete wir die Höhe messen. Zur Entscheidung standen:
 \begin{itemize}
