@@ -172,7 +172,65 @@ Bei unserer Simulation haben wir uns für ein Zeitintervall von \(\Delta t = 1\,
 
 \subsection{Aufbau des Programms}
 
-\textcolor{red}{Für Patrick :), sag einfach wo ich dann formulas.py erklären soll}
+Die Struktur des Programms basiert auf einer klar getrennten Architektur mit
+vier funktionalen Bereichen: \textbf{Controller}, \textbf{View}, 
+\textbf{Simulation} und \textbf{Physik/Modell}. 
+Der gesamte Datenfluss zwischen diesen Komponenten ist in Abbildung~\ref{fig:architektur} dargestellt.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{Simtools_architektur.png}
+    \caption{Datenfluss zwischen den Modulen der Wasserraketen-Simulation.}
+    \label{fig:architektur}
+\end{figure}
+
+\paragraph{Controller}
+Der Einstiegspunkt des Programms ist \texttt{main.py}. 
+Hier werden die Funktionsobjekte \texttt{start} und \texttt{stop} aus 
+\texttt{formulas.py} an die Fensterlogik \texttt{window.py} übergeben. 
+Weitere Berechnungen oder Datenverarbeitungen finden an dieser Stelle nicht statt.
+
+\paragraph{View}
+Die grafische Benutzeroberfläche besteht aus zwei Modulen:
+\begin{itemize}
+    \item \texttt{view/window.py}: verwaltet das Hauptfenster, Pygame-Events,
+          den Simulations-Loop und die Übergabe von Zeitintervallen (\texttt{dt\_ms})
+          an die Simulation.
+    \item \texttt{view/gui.py}: enthält die Eingabewerte des Nutzers in Form 
+          eines \texttt{values}-Dictionaries, das über die Callback-Funktionen
+          \texttt{on\_start()} bzw. \texttt{on\_contour\_plot()} an 
+          \texttt{window.py} übergeben wird.
+\end{itemize}
+
+\paragraph{Physik/Modell}
+Das Modul \texttt{physics/formulas.py} führt die physikalischen Berechnungen durch.
+Beim Start der Simulation werden die Eingabewerte des GUIs über
+\texttt{start(values)} übernommen und in einer globalen Variablen gespeichert.
+Das Modul berechnet anschließend Drücke, Schubkräfte, Wasserstandsentwicklung
+sowie weitere Größen. Zudem stellt es Funktionen wie
+\texttt{get\_max\_height()} und \texttt{get\_max\_velocity()} bereit.
+
+\paragraph{Simulation}
+Das Modul \texttt{simulation/simulation.py} bildet die zentrale Simulationslogik.
+Es erhält von \texttt{window.py} die Zeitdifferenz \texttt{dt\_ms} und aktualisiert
+daraufhin Position, Geschwindigkeit und Zustand der Rakete. 
+Die von \texttt{formulas.py} berechneten Werte werden über
+\texttt{sim.results} eingebunden.
+
+\paragraph{Raketenmodell}
+Im Modul \texttt{simulation/rocket.py} werden die grafische Darstellung und
+der physikalische Zustand der Rakete verwaltet. 
+Hierzu zählen unter anderem Position, Rotation und die Umrechnung von Pixeln
+in reale Meter (\texttt{pixel\_to\_meter}). 
+Beim Initialisieren der Rakete wird ebenfalls auf die Eingabewerte des Nutzers
+(über \texttt{gui\_input\_values}) zugegriffen.
+
+Zusammen ergibt sich ein modular aufgebautes System, bei dem jede Ebene
+eine klar definierte Aufgabe besitzt: Die GUI liefert Eingaben, das
+Fenster verwaltet die Steuerung, die Physik berechnet die Kräfte und
+die Simulation setzt diese Kräfte in Bewegung der Rakete um.
+
+\textcolor{red}{Für Simon check mal ob es passt}
 \section{Benutzerhandbuch für das Programm}
 Erklärung der GUI und der verschiedenen Buttons
 \newline \textcolor{red}{Auch für Patrick :)}
