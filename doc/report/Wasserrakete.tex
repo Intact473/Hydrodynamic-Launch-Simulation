@@ -91,6 +91,7 @@ Der Massenstrom \(\dot{m}\) des ausgestoßenen Wassers berechnet sich aus der Ko
 \dot{m} = \rho_{\text{Wasser}} \, v_e \, A_n
 \end{equation}
 \(A_n\) ist die Querschnittsfläche der Düse.
+Da hier die Düse als eine kreisförmige Öffnung angenommen wird, berechnet sich die Querschnittsfläche zu \(A_n = \frac{\pi}{4} d_{\text{nozzle}}^2\), wobei \(d_{\text{nozzle}}\) der Düsendurchmesser ist.
 
 \subsection{Schubkraft}
 Die Schubkraft \(F_{\text{thrust}}\), die auf die Rakete wirkt, ist:
@@ -230,7 +231,6 @@ eine klar definierte Aufgabe besitzt: Die GUI liefert Eingaben, das
 Fenster verwaltet die Steuerung, die Physik berechnet die Kräfte und
 die Simulation setzt diese Kräfte in Bewegung der Rakete um.
 
-\textcolor{red}{Für Simon check mal ob es passt}
 \section{Benutzerhandbuch für das Programm}
 
 Die grafische Benutzeroberfläche der Simulation ist in zwei Bereiche
@@ -310,7 +310,6 @@ Boden markiert die Start- und Aufprallposition.
 
 Während der Simulation aktualisieren sich Höhe, Geschwindigkeit und
 Rotation der Rakete in Echtzeit.
-\newline \textcolor{red}{Für Simon: Checks mal}
 \section{Simulationsergebnisse}
 Um die Simulationsergebnisse auswerten zu können, mussten wir uns zuerst überlegen, an welcher Stelle der Rakete wir die Höhe messen. Zur Entscheidung standen:
 \begin{itemize}
