@@ -339,7 +339,7 @@ def calculateValues(plotValues=False):
         last = results[-1]
         if last["posY"] <= 0.0 and step > 4:
             break # Abbruch wenn Rakete wieder am Boden ist (step > 4 willkürlich gewählt, damit Anfangsposition ausgenommen wird)
-        if last["water_level"] <= 0.0:
+        if last["water_level"] <= 0.0 or last["pressure"] < inputs["P_atm"]:
             total_mass = inputs["empty_rocket_weight"]
             air_resistance = Air_Resistance(inputs["diameter_rocket"], last["velocity"])
             gravity_force = Gravity_force(total_mass)
@@ -362,9 +362,9 @@ def calculateValues(plotValues=False):
                 "water_level": 0.0,
                 "total_mass": total_mass,
             })
-        else:
+        else: # normale Berechnung
             mass_flow_prev = Mass_flow(inputs["density_water"], last["ejection_velocity"], nozzle_area)
-            water_level = max(0.0, last["water_level"] - (mass_flow_prev / inputs["density_water"]) * dt)
+            water_level = max(0.0, last["water_level"] - (mass_flow_prev / inputs["density_water"]) * dt)   # Euler Schritt
             air_volume = Air_volume(inputs["bottle_volume"], water_level)
             pressure = Pressure(inputs["pressure"], inputs["bottle_volume"] - inputs["water_level_rocket"], air_volume, inputs["kappa_gas"])
             ejection_velocity = Ejection_velocity(pressure, inputs["density_water"], inputs["P_atm"])
@@ -375,6 +375,7 @@ def calculateValues(plotValues=False):
             gravity_force = Gravity_force(total_mass)
             total_force = thrust_value - air_resistance - gravity_force
             acceleration = total_force / total_mass if total_mass > 0 else 0.0
+            # Ergebnisse speichern
             results.append({
                 "time": time,
                 "mass_flow_prev": mass_flow_prev,
@@ -388,8 +389,8 @@ def calculateValues(plotValues=False):
                 "gravity_force": gravity_force,
                 "total_force": total_force,
                 "acceleration": acceleration,
-                "velocity": last["velocity"] + acceleration * dt,
-                "posY": max(0.0, last["posY"] + last["velocity"] * dt),
+                "velocity": last["velocity"] + acceleration * dt,       # Euler Schritt
+                "posY": max(0.0, last["posY"] + last["velocity"] * dt), # Euler Schritt
                 "total_mass": total_mass,
             })
 
