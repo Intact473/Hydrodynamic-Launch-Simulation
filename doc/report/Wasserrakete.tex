@@ -25,7 +25,7 @@ Der Körper einer Wasserrakete besteht typischerweise aus einer stabilen Kunstst
 Anschließend wird die übrige Luft in der Flasche unter Druck gesetzt.
 Die Flasche dient als Druckbehälter und gleichzeitig als Raketenkörper.
 Die Öffnung der Flasche dient als Düse, hier wird also das Wasser durch die mit Überdruck versetzte Luft ausgestoßen.
-Durch den Rückstoß (3. Newtonsches Gesetz) wird die Rakete nach oben beschleunigt, bis das gesamte Wasser ausgestoßen wurde, oder die Luft keinen Druck mehr aufbauen kann.
+Durch den Rückstoß (3. Newtonsches Gesetz) wird die Rakete nach oben beschleunigt, bis das gesamte Wasser ausgestoßen wurde, oder die Luft keinen Überdruck mehr hat.
 
 Danach fliegt die Rakete im freien Fall weiter, bis sie schließlich wieder am Boden aufschlägt. 
 Ein Fallschirm kann zur sicheren Landung beitragen, diesen haben wir jedoch nicht in unsere Simulation integriert.
@@ -59,101 +59,103 @@ Wir haben uns bewusst für ein vereinfachtes Modell entschieden, das die wesentl
 Beispielsweise werden Effekte wie Turbulenzen und komplexe Strömungsdynamiken vernachlässigt.
 Im Folgenden werden die Gleichungen aufgeführt, die in unserem Modell verwendet werden.
 
+(Hinweis: Zeitabhängige Größen sind mit \( (t) \) gekennzeichnet.)
+
 \subsection{Druckentwicklung}
 Das Volumen der Luft in der Flasche ändert sich während des Ausstoßes des Wassers, wofür zwei verschiedene Gleichungen in Frage kommen:
 
 \begin{itemize}   
-    \item Die isotherme Zustandsänderung (\(\Delta T = 0\)):
-    \begin{equation}p_0 V_0 = p_1 V_1\end{equation}
-    \item und die adiabatische Zustandsänderung (\(\Delta Q = 0\)) :
+    \item Die isotherme Zustandsänderung (Temperaturänderung \(\Delta T = 0\)) \cite{formelsammlung2024}:       % Seite 138/139
+    \begin{equation}p_0 \, V_0 = p_1(t) \cdot V_1(t)\end{equation}
+    \item und die adiabatische Zustandsänderung (Wärmeaustausch \(\Delta Q = 0\)) \cite{formelsammlung2024}:    % Seite 138/139
     \begin{equation}
-        p_0 V_0^\kappa = p_1 V_1^\kappa
+        p_0 \, V_0^\kappa = p_1(t) \cdot V_1(t)^\kappa
         \label{eq:adiabatisch}
     \end{equation}
 \end{itemize}
+Dabei ist $p_0$ der Anfangsdruck, $V_0$ das Anfangsvolumen der Luft, $p_1(t)$ bzw. $V_1(t)$ die Größen nach der Expansion und $\kappa$ der Adiabatenexponent (für Luft $\kappa \approx 1{,}4$).
+
 Wir haben uns für die adiabatische Zustandsänderung~\eqref{eq:adiabatisch} entschieden, da der Druckabfall in der kurzen Zeit des Ausstoßes schneller erfolgt als der Wärmeaustausch mit der Umgebung.
-Dabei ist $p_0$ der Anfangsdruck, $V_0$ das Anfangsvolumen der Luft, $p_1$ bzw. $V_1$ die Größen nach der Expansion und $\kappa$ der Adiabatenexponent (für Luft $\kappa \approx 1{,}4$).
 
 \subsection{Ausstoßgeschwindigkeit des Wassers}
-Die Geschwindigkeit \(v_e\), mit der das Wasser durch die Düse ausgestoßen wird, ergibt sich aus der Bernoulli-Gleichung:
+Die Geschwindigkeit \(v_e\), mit der das Wasser durch die Düse ausgestoßen wird, ergibt sich aus der Bernoulli-Gleichung \cite{formelsammlung2024}: % Seite 84
 \begin{equation}
-    p - p_\text{atm} = \frac{1}{2}\,\rho_{\text{Wasser}}\,v_e^2
+    \underbrace{\frac{1}{2} \rho_{\mathrm{W}} \, v_{\text{innen}}^2(t)}_{\text{Staudruck}}
+    + \underbrace{\rho_{\mathrm{W}} \, (g + a(t)) \, h_{\mathrm{W}}}_{\text{Schweredruck}}
+    + \underbrace{p(t)}_{\text{Kolbendruck}}
+    = \frac{1}{2} \rho_{\mathrm{W}} \, v_e^2(t)
+    + \underbrace{\rho_{\mathrm{W}} \, (g + a(t)) \, h_{\text{außen}}}_{= \, 0}
+    + p_{\text{atm}}
 \end{equation}
-Umgestellt nach \(v_e\) ergibt sich:
+Umgestellt nach \(v_e(t)\) ergibt sich unter Vernachlässigung des Schweredrucks, und mit \(v_{\text{innen}} = 0\):
 \begin{equation}
-v_e = \sqrt{\frac{2\,(p - p_{\text{atm}})}{\rho_{\text{Wasser}}}}
+v_e(t) = \sqrt{\frac{2\,(p(t) - p_{\text{atm}})}{\rho_{\mathrm{W}}}}
 \end{equation}
-\(p\) ist der Druck in der Flasche, \(p_{\text{atm}}\) der Umgebungsdruck und \(\rho_{\text{Wasser}}\) die Dichte des Wassers.
+Hierbei ist \(p(t)\) der Druck in der Flasche, \(p_{\text{atm}}\) der Umgebungsdruck und \(\rho_{\mathrm{W}}\) die Dichte des Wassers.
 
 \subsection{Massenstrom}
-Der Massenstrom \(\dot{m}\) des ausgestoßenen Wassers berechnet sich aus der Kontinuitätsgleichung:
+Der Massenstrom \(\dot{m}_e(t)\) des ausgestoßenen Wassers berechnet sich aus der Kontinuitätsgleichung \cite{formelsammlung2024}: % Seite 68
 \begin{equation}
-\dot{m} = \rho_{\text{Wasser}} \, v_e \, A_n
+\dot{m}_e(t) = \rho_{\mathrm{W}} \, v_e(t) \, A_n
 \end{equation}
-\(A_n\) ist die Querschnittsfläche der Düse.
-Da hier die Düse als eine kreisförmige Öffnung angenommen wird, berechnet sich die Querschnittsfläche zu \(A_n = \frac{\pi}{4} d_{\text{nozzle}}^2\), wobei \(d_{\text{nozzle}}\) der Düsendurchmesser ist.
+Dabei ist \(A_n\) die Querschnittsfläche der Düse. Für eine kreisförmige Öffnung gilt:
+\begin{equation*}
+A_n = \frac{\pi}{4} d_{\text{nozzle}}^2
+\end{equation*}
+wobei \(d_{\text{nozzle}}\) der Düsendurchmesser ist.
 
 \subsection{Schubkraft}
-Die Schubkraft \(F_{\text{thrust}}\), die auf die Rakete wirkt, ist:
+Die Schubkraft \(F_{\text{thrust}}(t)\), die auf die Rakete wirkt \cite{formelsammlung2024}, ist: % Seite 17
 \begin{equation}
-F_{\text{thrust}} = \dot{m} \, v_e = \rho_{\text{Wasser}}\,A_n\,v_e^2
+F_{\text{thrust}}(t) = \dot{m}_e(t) \, v_e(t)
 \end{equation}
 
 \subsection{Kräftebilanz mit Luftwiderstand und Gewichtskraft}
-Die Rakete erfährt neben dem Schub auch Luftwiderstand und Gewichtskraft:
+Die Rakete erfährt neben dem Schub auch Luftwiderstand und Gewichtskraft, die dem Schub entgegenwirken:
 \begin{equation}
-F_{\text{gesamt}} = F_{\text{thrust}} - F_{\text{drag}} - F_{\text{G}}
+F_{\text{gesamt}}(t) = F_{\text{thrust}}(t) - F_{\text{drag}}(t) - F_{\text{G}}(t)\\[4pt]
 \end{equation}
-Der Luftwiderstand wird mit folgender Formel abgeschätzt:
+bzw. während des freien Falls (\(F_{\text{thrust}}(t) = 0\)):
 \begin{equation}
-F_{\text{drag}} = \tfrac{1}{2}\,C_d \,\rho_{\text{Luft}} \,A_{\text{Quer}}\, v^2
+F_{\text{gesamt}}(t) = - F_{\text{drag}}(t) - F_{\text{G}}(t)
 \end{equation}
-Dabei ist \(C_d\) der Luftwiderstandskoeffizient (Annahme: \(C_d \approx 1\)), \(\rho_{\text{Luft}}\) die Dichte der Luft, \(A_{\text{Quer}}\) die Querschnittsfläche der Rakete senkrecht zur Flugrichtung und \(v\) die Geschwindigkeit der Rakete.
+Der Luftwiderstand wird mit folgender Formel abgeschätzt \cite{formelsammlung2024}: % Seite 89
+\begin{equation}
+F_{\text{drag}}(t) = \tfrac{1}{2}\,C_d \,\rho_{\mathrm{Luft}} \,A_{\text{Quer}}\, v^2(t)
+\end{equation}
+Dabei ist \(C_d\) der Luftwiderstandskoeffizient (hier: \(C_d \approx 1\)), \(\rho_{\mathrm{Luft}}\) die Dichte der Luft, \(A_{\text{Quer}}\) die Querschnittsfläche der Rakete senkrecht zur Flugrichtung (effektive Fläche) und \(v\) die Geschwindigkeit der Rakete.
 
-Zusätzlich ergibt sich die Gewichtskraft der Rakete zu:
+Die Gewichtskraft \(F_{\text{G}}(t)\) der Rakete schreiben wir als:
 \begin{equation}
-F_{\text{G}} = m_{\text{Rakete}} \, g
+F_{\text{G}}(t) = m(t) \cdot g
 \end{equation}
 mit der Erdbeschleunigung \(g \approx 9{,}81\,\mathrm{m/s^2}\).
 \subsection{Bewegungsgleichungen}
 Die Bewegungsgleichungen für die Rakete lauten:
-\begin{equation}
-a = \frac{F_{\text{gesamt}}}{m_{\text{Rakete}}}
-\end{equation}
-\begin{equation}
-    v = \int a(t) \, dt
-\end{equation}
-\begin{equation}
-    h = \int v(t) \, dt
-\end{equation}
+\begin{align}
+    h(t) &= \int v(t) \ dt,\\[6pt]
+    v(t) &= \int a(t) \, dt,\\[6pt]
+    a(t) &= \frac{F_{\text{gesamt}}(t)}{m(t)}
+\end{align}
 
-\subsection{Gesamte DGL}
-Die gesamte Differentialgleichung für die Höhe \(h(t)\) der Rakete lautet somit:
+\subsection{Gesamtes DGL-System}
+Bei dem DGL-System handelt es sich um gekoppelte Differentialgleichungen, da die rechte Seite mindestens einer Differentialgleichung von anderen unbekannten Funktionen abhängt.
+Konkret hängt $\dot{h}$ von $v$, $\dot{v}$ sowohl von $v$ als auch von $V_w$, und $\dot{V}_w$ implizit über den Druck ebenfalls von $V_w$ ab. Da sich die Größen wechselseitig beeinflussen, können die Gleichungen nicht unabhängig voneinander gelöst werden.
+
+Das gesamte DGL-System lautet (Formeln für Hilfsgrößen wie \(F_{\mathrm{thrust}}\) etc. siehe oben.):
 \begin{align*}
-&\dot h(t)=v(t),\\[4pt]
-&\dot v(t)=\frac{F_{\mathrm{thrust}}(t)-F_{\text{drag}}(v(t))-m(t)g}{m(t)},\\[4pt]
-&\dot m(t)=-\dot m_e(t).
+    \dot h(t) &= \textcolor{red}{v(t)},\\[4pt]
+    \textcolor{red}{\dot v(t)} &= \dfrac{F_{\mathrm{gesamt}}(t)}{m(t)} = \dfrac{F_{\mathrm{thrust}}(t) - F_{\mathrm{drag}}(v(t)) - F_{\mathrm{G}}(t)}{m_{\mathrm{empty}} + \rho_{\mathrm{W}}\,\textcolor{blue}{V_w(t)}},\\[6pt]
+    \textcolor{blue}{\dot V_w(t)} &= -\dfrac{\dot m_e(t)}{\rho_{\mathrm{W}}}\\[6pt]
+\end{align*}
+Mit den Anfangsbedingungen:
+\begin{align*}
+h(t=0)&=0,\qquad v(t=0)=0,\qquad V_w(t=0)=V_{w,0}.
 \end{align*}
 
-Mit
-\begin{align*}
-&\dot m_e(t)=\rho_{\mathrm{W}}\,A_n\,v_e(t)\\[6pt]
-&v_e(t)=\sqrt{\dfrac{2\big(P(t)-P_{\mathrm{atm}}\big)}{\rho_{\mathrm{W}}}}\quad(P>P_{\mathrm{atm}}),\\[6pt]
-&F_{\mathrm{thrust}}(t)=\dot m_e(t)\,v_e(t),\\[6pt]
-&F_{\text{drag}}(v)=\tfrac{1}{2}C_d\rho_{\mathrm{Luft}}A_{\mathrm{Quer}}\,v|v|,\\[6pt]
-&m(t)=m_{\mathrm{empty}}+\rho_{\mathrm{W}}\,V_w(t),\quad V_w'(t)=-\frac{\dot m_e(t)}{\rho_{\mathrm{W}}},\\[6pt]
-&P(t)=P_0\Big(\dfrac{V_{a,0}}{V_a(t)}\Big)^{\kappa},\quad V_a(t)=V_{\mathrm{bottle}}-V_w(t).
-\end{align*}
-
-mit den Anfangsbedingungen
-\begin{align*}
-&h(0)=0\\[4pt]
-&v(0)=0\\[4pt]
-&V_w(0)=V_{w,0}
-\end{align*}
 \section{Implementierung des Modells}
 \subsection{Numerische Methoden}
-Um die Differentialgleichung für die Höhe der Rakete zu lösen, haben wir den Vorwärts-Euler für Differentialgleichungen angesetzt.
+Um das Differentialgleichungssystem für die Höhe der Rakete zu lösen, haben wir die Vorwärts-Euler-Methode für Differentialgleichungen angesetzt.
 Hierbei berechnet man die Ableitung an der aktuellen Stelle und nutzt diese, um den nächsten Wert zu approximieren.
 
 Beispiel für Gleichung:
@@ -164,7 +166,7 @@ Berechne \(v(t)\) an Stelle \(t_0\):
 \begin{equation*}
     \dot h(t_0) = v(t_0)
 \end{equation*}
-Berechne \(h\) an der nächsten Stelle \(t_1 = t_0 + \Delta t\) (lineare Approximation):
+Berechne \(h\) an der nächsten Stelle \(t_1 = t_0 + \Delta t\) (lineare Approximation bzw. Taylor-Entwicklung 1. Ordnung):
 \begin{equation*}
     h(t_1) \approx h(t_0) + \dot h(t_0) \cdot \Delta t 
 \end{equation*}
@@ -408,8 +410,8 @@ Dazu gehören zum Beispiel:
 \listoffigures
 
 \begin{thebibliography}{9}
-    \bibitem{raketenbuch}
-    Autor, \emph{Titel}, 1. Auflage, Verlag, Jahr.
+    \bibitem{formelsammlung2024}
+    Kurzweil, P., Frenzel, B., Gebhard. F, \emph{Physik Formelsammlung}, 6. Auflage, Springer Verlag, 2024.
 \end{thebibliography}
 
 
