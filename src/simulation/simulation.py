@@ -2,7 +2,6 @@ import pygame as pg
 import math
 from pygame.math import Vector2 as Vec2
 from simulation.rocket import Rocket
-import physic.formulas as formulas
 
 class Simulation:
     def __init__(self, sim_rect: pg.Rect):

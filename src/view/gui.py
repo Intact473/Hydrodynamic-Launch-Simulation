@@ -2,7 +2,6 @@ import sys
 sys.dont_write_bytecode = True
 import pygame as pg
 import pygame_gui as gui
-import physic.formulas as formulas
 
 
 class ControlPanel:
