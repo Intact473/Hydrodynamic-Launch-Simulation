@@ -206,19 +206,21 @@ Die grafische Benutzeroberfläche besteht aus zwei Modulen:
 \end{itemize}
 
 \paragraph{Physik/Modell}
-Das Modul \texttt{physics/formulas.py} führt die physikalischen Berechnungen durch.
-Beim Start der Simulation werden die Eingabewerte des GUIs über
-\texttt{start(values)} übernommen und in einer globalen Variablen gespeichert.
-Das Modul berechnet anschließend Drücke, Schubkräfte, Wasserstandsentwicklung
-sowie weitere Größen. Zudem stellt es Funktionen wie
-\texttt{get\_max\_height()} und \texttt{get\_max\_velocity()} bereit.
+Das Modul \texttt{physics/formulas.py} führt die physikalischen Berechnungen der
+Wasserrakete durch. Beim Start der Simulation werden die Eingabewerte des GUIs über
+\texttt{start(values)} übernommen. Die Funktion berechnet daraus die zeitdiskrete
+Flugkurve der Rakete und gibt diese als Rückgabewert (\texttt{results}) an
+\texttt{window.py} zurück.
+Zusätzlich stellt das Modul Hilfsfunktionen zur Auswertung der Ergebnisse bereit,
+wie \texttt{get\_max\_height()} und \texttt{get\_max\_velocity()}.
 
 \paragraph{Simulation}
 Das Modul \texttt{simulation/simulation.py} bildet die zentrale Simulationslogik.
 Es erhält von \texttt{window.py} die Zeitdifferenz \texttt{dt\_ms} und aktualisiert
 daraufhin Position, Geschwindigkeit und Zustand der Rakete. 
-Die von \texttt{formulas.py} berechneten Werte werden über
-\texttt{sim.results} eingebunden.
+Die von \texttt{formulas.py} berechnete Flugkurve wird von \texttt{window.py}
+entgegengenommen und über \texttt{sim.load\_results(results)} bzw.
+\texttt{sim.results} an die Simulation übergeben.
 
 \paragraph{Raketenmodell}
 Im Modul \texttt{simulation/rocket.py} werden die grafische Darstellung und
