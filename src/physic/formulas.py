@@ -1,24 +1,21 @@
 import math
 import matplotlib.pyplot as plt
-import view.window as vw
 import numpy as np
 
 gui_input_values = {}
-results = []
 
-def start(values:dict):
+def start(values:dict) -> list[dict]:
     """
     Startet die Simulation mit den gegebenen Eingabewerten.
 
     Args:
         values (dict): Eingabeparameter, siehe calculateValues.
     """
-    global results
     set_values(values)
-    results = calculateValues(plotValues=False) # Hier auf true setzen, falls Plots der Größen gewünscht sind
+    results = calculateValues(plotValues=False)
     print("max height:", get_max_height(results))
     print("max velocity:", get_max_velocity(results))
-    vw.get_sim().time = 0.0
+    return results
 
 def show_contour_plot(values:dict):
     """
@@ -38,7 +35,7 @@ def stop():
     Args:
         None
     """
-    vw.get_sim().time = 0.0
+    pass
 
 def set_values(values: dict):
     """

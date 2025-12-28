@@ -41,8 +41,12 @@ def run_window(start=None, stop=None):
         sim.start_pos_y = sim.rocket.pos.y
         print("start pos: ", sim.start_pos_y)
         sim.rocket_is_flying = True
-        if start:
-            start(values)
+        if start:        
+            results = start(values)          # jetzt kommt was zurück
+            sim.results = results
+            sim.time = 0.0
+            sim.rocket_is_flying = True
+            sim.start_pos_y = sim.rocket.pos.y  
 
     def handle_reset():
         """Handle the reset button event from the control panel.
@@ -71,6 +75,9 @@ def run_window(start=None, stop=None):
 
         dt /= 1000.0  # convert to seconds
 
+        # dt_s = clock.tick(60) / 1000.0
+        # sim.update(dt_s)
+
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 running = False
@@ -79,14 +86,12 @@ def run_window(start=None, stop=None):
             if event.type == pg.USEREVENT:
                 if event.user_type == gui.UI_BUTTON_PRESSED:
                     panel.handle_event(event)
-
-        sim.results = formulas.results
         
         sim.update(dt_ms)
 
-        if not sim.rocket_is_flying and formulas.results:
-            max_v = formulas.get_max_velocity(formulas.results)
-            max_h = formulas.get_max_height(formulas.results)
+        if not sim.rocket_is_flying and sim.results:
+            max_v = formulas.get_max_velocity(sim.results)
+            max_h = formulas.get_max_height(sim.results)
             panel.out_max_velocity.set_text(f"{max_v:.2f}")
             panel.out_max_height.set_text(f"{max_h:.2f}")
             
