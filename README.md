@@ -10,5 +10,7 @@ oder source .venv/bin/activate
 venv\Scripts\Activate.ps1
 
 # Bibilotheken Installieren
-# ACHTUNG: Python 3.11 erforderlich (höher nicht zwingend unterstützt)
+ACHTUNG: Python 3.11 erforderlich (höher nicht zwingend unterstützt)
 pip install -r requirements.txt
+
+Dann main.py ausführen
