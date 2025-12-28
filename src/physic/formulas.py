@@ -15,7 +15,7 @@ def start(values:dict):
     """
     global results
     set_values(values)
-    results = calculateValues(plotValues=False)
+    results = calculateValues(plotValues=False) # Hier auf true setzen, falls Plots der Größen gewünscht sind
     print("max height:", get_max_height(results))
     print("max velocity:", get_max_velocity(results))
     vw.get_sim().time = 0.0

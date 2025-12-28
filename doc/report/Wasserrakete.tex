@@ -343,7 +343,7 @@ Für unsere gewählten Standard-Parameter (siehe Tabelle~\ref{tab:standardparame
 Die maximale Höhe (\texttt{posY}) betrug \(21{,}05\,\mathrm{m}\) und die Geschwindigkeit beim Auftreffen der Rakete (\texttt{velocity}) \(15{,}75\,\mathrm{m/s}\).
 
 \subsection{Phasen des Flugs}
-Bis ca \(0{,}26\,\mathrm{s}\) lässt sich in Abbildung~\ref{fig:simulation_plot} die Schubphase erkennen.
+Bis ca \(0{,}26\,\mathrm{s}\) lässt sich in Abbildung~\ref{fig:simulation_plot}\footnote{Um diese Plots zu erhalten, muss die Variable \texttt{plotValues} in \texttt{formulas.py} in Zeile 18 auf \texttt{True} gesetzt werden. (Siehe auch Kommentar im Code)} die Schubphase erkennen.
 Hierbei wird Wasser durch den Überdruck in der Flasche aus der Düse ausgestoßen, was eine Schubkraft erzeugt.
 Wenn der gesamte Wasservorrat ausgestoßen ist oder der Druck in der Flasche auf den Umgebungsdruck gefallen ist, endet die Schubphase und es lässt sich erkennen, dass die Beschleunigung (\texttt{acceleration}) negativ wird, sowie dass der Wasserstand (\texttt{water\_level}) auf null fällt.
 Kurz davor erreicht die Rakete ihre maximale Beschleunigung von ca. \(110\,\mathrm{m/s^2}\), da hier die Schubkraft auf eine minimale Masse wirkt (\(a = \frac{F}{m}\)).
