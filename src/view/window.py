@@ -29,8 +29,7 @@ def run_window(start=None, stop=None):
     """Run the main application window with a control panel and a simulation area."""
     running = True
     manager = gui.UIManager((WINDOW_W, WINDOW_H))
-    
-    #sim.place_rocket_bottom_center(margin_px=10)
+
     sim.camera_center = Vec2(sim.rocket.pos) - Vec2(0, 2.0)     
 
     def handle_start(values):
@@ -75,9 +74,6 @@ def run_window(start=None, stop=None):
         dt_ms = dt
 
         dt /= 1000.0  # convert to seconds
-
-        # dt_s = clock.tick(60) / 1000.0
-        # sim.update(dt_s)
 
         for event in pg.event.get():
             if event.type == pg.QUIT:
