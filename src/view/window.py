@@ -35,6 +35,7 @@ def run_window(start=None):
 
     sim.camera_center = Vec2(sim.rocket.pos) - Vec2(0, 2.0)     
 
+    # defined event handlers to pass into ControlPanel as callback functions
     def handle_start(values):
         """Handle the start button event from the control panel.
         :param values: Dictionary of input values from the control panel

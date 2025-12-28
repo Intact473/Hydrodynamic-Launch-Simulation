@@ -6,26 +6,26 @@ gui_input_values = {}
 
 def start(values:dict) -> list[dict]:
     """
-    Executes the physical simulation and returns the computed flight curve.
+    Execute the physical simulation and return the computed flight curve.
 
     Args:
         values (dict): Input parameters from the GUI.
 
     Returns:
-        list[dict]: Time-discrete flight data used by the simulation.
+        list[dict]: Time-discrete flight data produced by the simulation.
     """
     set_values(values)
-    results = calculateValues(plotValues=False) # Hier auf true setzen, falls Plots der Größen gewünscht sind
+    results = calculateValues(plotValues=False)  # Set to True if plots of quantities are desired
     print("max height:", get_max_height(results))
     print("max velocity:", get_max_velocity(results))
     return results
 
 def show_contour_plot(values:dict):
     """
-    Zeigt einen Konturplot für die maximale Höhe in Abhängigkeit von Düsengröße und Wasserfüllung.
+    Show a contour plot for maximum height depending on nozzle size and water fill.
 
     Args:
-        values (dict): Eingabeparameter.
+        values (dict): Input parameters.
     """
     set_values(values)
     try_combinations(min_nozzle_mm=1.0, max_nozzle_mm=40.0, step_nozzle_mm=1.0,
@@ -33,49 +33,49 @@ def show_contour_plot(values:dict):
 
 def set_values(values: dict):
     """
-    Setzt die globalen Eingabewerte für die Simulation.
+    Set the global input values for the simulation.
 
     Args:
-        values (dict): Parameter für die Simulation.
+        values (dict): Parameters for the simulation.
     """
     global gui_input_values
     gui_input_values = values.copy()
 
 def get_max_height(results) -> float:
     """
-    Gibt die maximale Höhe aus der Ergebnisliste zurück.
+    Return the maximum height from the results list.
 
     Args:
-        results (list): Liste von dicts mit Schlüssel 'posY' [m]
+        results (list): List of dicts with key 'posY' [m]
 
     Returns:
-        float: Maximale Höhe [m]
+        float: Maximum height [m]
     """
     return max((entry['posY'] for entry in results), default=0.0)
 
 def get_max_velocity(results) -> float:
     """
-    Gibt die Auftreffgeschwindigkeit aus der Ergebnisliste zurück.
+    Return the impact velocity from the results list.
 
     Args:
-        results (list): Liste von dicts mit Schlüssel 'velocity' [m/s]
+        results (list): List of dicts with key 'velocity' [m/s]
 
     Returns:
-        float: Maximale Geschwindigkeit [m/s]
+        float: Maximum velocity [m/s]
     """
     return results[-1]['velocity'] if results else 0.0
 
 def try_combinations(min_nozzle_mm, max_nozzle_mm, step_nozzle_mm, min_bottle_volume_l, max_bottle_volume_l, step_bottle_volume_l):
     """
-    Führt eine Parameterstudie für Düsengröße und Wasserfüllung durch und plottet die maximale Höhe.
+    Perform a parameter study for nozzle diameter and water fill and plot the maximum height.
 
     Args:
-        min_nozzle_mm (float): Minimaler Düsendurchmesser [mm]
-        max_nozzle_mm (float): Maximaler Düsendurchmesser [mm]
-        step_nozzle_mm (float): Schrittweite Düsendurchmesser [mm]
-        min_bottle_volume_l (float): Minimales Flaschenvolumen [l]
-        max_bottle_volume_l (float): Maximales Flaschenvolumen [l]
-        step_bottle_volume_l (float): Schrittweite Flaschenvolumen [l]
+        min_nozzle_mm (float): Minimum nozzle diameter [mm]
+        max_nozzle_mm (float): Maximum nozzle diameter [mm]
+        step_nozzle_mm (float): Step size for nozzle diameter [mm]
+        min_bottle_volume_l (float): Minimum bottle volume [l]
+        max_bottle_volume_l (float): Maximum bottle volume [l]
+        step_bottle_volume_l (float): Step size for bottle volume [l]
 
     Returns:
         None
@@ -103,126 +103,126 @@ def try_combinations(min_nozzle_mm, max_nozzle_mm, step_nozzle_mm, min_bottle_vo
 
 def Thrust_nozzle_area(diameter_mm: float) -> float:
     """
-    Berechnet die Düsenfläche aus dem Durchmesser.
+    Calculate nozzle area from diameter.
 
     Args:
-        diameter_mm (float): Düsendurchmesser [mm]
+        diameter_mm (float): Nozzle diameter [mm]
 
     Returns:
-        float: Fläche [m^2]
+        float: Area [m^2]
     """
     r = diameter_mm * 0.0005
     return math.pi * r * r
 
 def Air_volume(total_volume, water_volume):
     """
-    Berechnet das Luftvolumen in der Flasche.
+    Calculate the air volume in the bottle.
 
     Args:
-        total_volume (float): Gesamtvolumen [m^3]
-        water_volume (float): Wasservolumen [m^3]
+        total_volume (float): Total volume [m^3]
+        water_volume (float): Water volume [m^3]
 
     Returns:
-        float: Luftvolumen [m^3]
+        float: Air volume [m^3]
     """
     return max(total_volume - water_volume, 0.0)
 
 def Pressure(P_0, V_0, V, kappa_gas):
     """
-    Berechnet die Druckentwicklung in der Flasche.
+    Compute pressure development in the bottle.
 
     Args:
-        P_0 (float): Anfangsdruck [Pa]
-        V_0 (float): Anfangsvolumen [m^3]
-        V (float): aktuelles Volumen [m^3]
-        kappa_gas (float): Adiabatenexponent [einheitslos]
+        P_0 (float): Initial pressure [Pa]
+        V_0 (float): Initial volume [m^3]
+        V (float): Current volume [m^3]
+        kappa_gas (float): Adiabatic exponent [unitless]
 
     Returns:
-        float: Druck [Pa]
+        float: Pressure [Pa]
     """
     return P_0 if V <= 0 else P_0 * (V_0 / V) ** kappa_gas
 
 def Ejection_velocity(pressure, density_water, P_atm):
     """
-    Berechnet die Ausstoßgeschwindigkeit des Wassers.
+    Calculate the ejection velocity of the water.
 
     Args:
-        pressure (float): Druck [Pa]
-        density_water (float): Dichte des Wassers [kg/m^3]
-        P_atm (float): Atmosphärendruck [Pa]
+        pressure (float): Pressure [Pa]
+        density_water (float): Water density [kg/m^3]
+        P_atm (float): Atmospheric pressure [Pa]
 
     Returns:
-        float: Geschwindigkeit [m/s]
+        float: Velocity [m/s]
     """
     return math.sqrt(2 * (pressure - P_atm) / density_water) if pressure > P_atm and density_water > 0 else 0.0
 
 def Mass_flow(density_water, ejection_velocity, nozzle_area):
     """
-    Berechnet den Massenstrom des Wassers.
+    Calculate the mass flow of the water.
 
     Args:
-        density_water (float): Dichte des Wassers [kg/m^3]
-        ejection_velocity (float): Ausstoßgeschwindigkeit [m/s]
-        nozzle_area (float): Düsenfläche [m^2]
+        density_water (float): Water density [kg/m^3]
+        ejection_velocity (float): Ejection velocity [m/s]
+        nozzle_area (float): Nozzle area [m^2]
 
     Returns:
-        float: Massenstrom [kg/s]
+        float: Mass flow [kg/s]
     """
     return density_water * ejection_velocity * nozzle_area
 
 def Thrust(mass_flow, ejection_velocity):
     """
-    Berechnet die Schubkraft.
+    Calculate thrust.
 
     Args:
-        mass_flow (float): Massenstrom [kg/s]
-        ejection_velocity (float): Ausstoßgeschwindigkeit [m/s]
+        mass_flow (float): Mass flow [kg/s]
+        ejection_velocity (float): Ejection velocity [m/s]
 
     Returns:
-        float: Schub [N]
+        float: Thrust [N]
     """
     return mass_flow * ejection_velocity
 
 def Air_Resistance(diameter_rocket, velocity):
     """
-    Berechnet den Luftwiderstand.
+    Calculate aerodynamic drag.
 
     Args:
-        diameter_rocket (float): Durchmesser der Rakete [m]
-        velocity (float): Geschwindigkeit [m/s]
+        diameter_rocket (float): Rocket diameter [m]
+        velocity (float): Velocity [m/s]
 
     Returns:
-        float: Widerstandskraft [N]
+        float: Drag force [N]
     """
     C_w = 1.0
     rho_air = 1.225
     r = diameter_rocket / 2
     A = math.pi * r**2
-    # Widerstand ist immer entgegen der Bewegungsrichtung
+    # Drag is always opposite to the direction of motion
     return 0.5 * C_w * rho_air * A * velocity * abs(velocity)
 
 def Gravity_force(mass):
     """
-    Berechnet die Gewichtskraft.
+    Calculate gravitational force.
 
     Args:
-        mass (float): Masse [kg]
+        mass (float): Mass [kg]
 
     Returns:
-        float: Gewichtskraft [N]
+        float: Weight force [N]
     """
     return mass * 9.81
 
 def calculateValues(plotValues=False):
     """
-    Führt die Simulation der Rakete durch.
+    Run the rocket simulation.
 
     Args:
-        plotValues (bool): Wenn True, werden die Ergebnisse geplottet.
+        plotValues (bool): If True, results will be plotted.
     
     Returns:
-        list: Liste von dicts mit Zeitverlauf der Simulation.
-            Jeder dict enthält:
+        list: List of dicts with the time evolution of the simulation.
+            Each dict contains:
                 time [s]
                 posY [m]
                 velocity [m/s]
@@ -234,12 +234,12 @@ def calculateValues(plotValues=False):
                 water_level [m^3]
                 air_volume [m^3]
                 total_mass [kg]
-                usw.
+                etc.
     """
     defaults = {
         "kappa_gas": 1.4, "density_water": 1000.0, "P_atm": 101325.0, "endTime": 5.0
     }
-    # Eingabewerte sammeln bzw. kombinieren
+    # Collect and combine input values
     inputs = {**defaults, **(gui_input_values or {})}
     try:
         bottle_vol = float(inputs["bottle_volume"])
@@ -255,7 +255,7 @@ def calculateValues(plotValues=False):
     except Exception:
         raise ValueError("One or more inputs are not numeric.")
 
-    # Validierung der Eingaben mit passender Fehlermeldung
+    # Validate inputs with appropriate error messages
     if bottle_vol <= 0:
         raise ValueError("bottle_volume must be > 0 (liters).")
     if water_lvl < 0:
@@ -279,7 +279,7 @@ def calculateValues(plotValues=False):
     if end_time <= 0:
         raise ValueError("endTime must be > 0 (s).")
 
-    # Einheitenumrechnung auf SI
+    # Convert units to SI
     inputs.update({
         "pressure": pressure_bar * 1e5,           # bar -> Pa
         "water_level_rocket": water_lvl * 1e-3,   # l -> m³
@@ -296,7 +296,7 @@ def calculateValues(plotValues=False):
     results = []
     dt = 0.001  # 1 ms timestep
     steps = int(end_time / dt) + 1
-    # Berechnung der Werte für den initialen Zustand (Randbedingungen)
+    # Compute values for initial state (boundary conditions)
     nozzle_area = Thrust_nozzle_area(inputs["thrust_nozzle_diameter"])
     total_mass0 = inputs["empty_rocket_weight"] + inputs["density_water"] * inputs["water_level_rocket"]
     air_volume0 = max(inputs["bottle_volume"] - inputs["water_level_rocket"], 0.0)
@@ -324,12 +324,12 @@ def calculateValues(plotValues=False):
         "total_mass": total_mass0,
     })
 
-    # Haupt-Simulationsschleife
+    # Main simulation loop
     for step in range(1, steps):
         time = step * dt
         last = results[-1]
         if last["posY"] <= 0.0 and step > 4:
-            break # Abbruch wenn Rakete wieder am Boden ist (step > 4 willkürlich gewählt, damit Anfangsposition ausgenommen wird)
+            break  # Stop when rocket is back on the ground (step > 4 chosen to ignore initial state)
         if last["water_level"] <= 0.0 or last["pressure"] < inputs["P_atm"]:
             total_mass = inputs["empty_rocket_weight"]
             air_resistance = Air_Resistance(inputs["diameter_rocket"], last["velocity"])
@@ -353,9 +353,9 @@ def calculateValues(plotValues=False):
                 "water_level": 0.0,
                 "total_mass": total_mass,
             })
-        else: # normale Berechnung
+        else:  # normal calculation
             mass_flow_prev = Mass_flow(inputs["density_water"], last["ejection_velocity"], nozzle_area)
-            water_level = max(0.0, last["water_level"] - (mass_flow_prev / inputs["density_water"]) * dt)   # Euler Schritt
+            water_level = max(0.0, last["water_level"] - (mass_flow_prev / inputs["density_water"]) * dt)   # Euler step
             air_volume = Air_volume(inputs["bottle_volume"], water_level)
             pressure = Pressure(inputs["pressure"], inputs["bottle_volume"] - inputs["water_level_rocket"], air_volume, inputs["kappa_gas"])
             ejection_velocity = Ejection_velocity(pressure, inputs["density_water"], inputs["P_atm"])
@@ -366,7 +366,7 @@ def calculateValues(plotValues=False):
             gravity_force = Gravity_force(total_mass)
             total_force = thrust_value - air_resistance - gravity_force
             acceleration = total_force / total_mass if total_mass > 0 else 0.0
-            # Ergebnisse speichern
+            # Store results
             results.append({
                 "time": time,
                 "mass_flow_prev": mass_flow_prev,
@@ -380,15 +380,15 @@ def calculateValues(plotValues=False):
                 "gravity_force": gravity_force,
                 "total_force": total_force,
                 "acceleration": acceleration,
-                "velocity": last["velocity"] + acceleration * dt,       # Euler Schritt
-                "posY": max(0.0, last["posY"] + last["velocity"] * dt), # Euler Schritt
+                "velocity": last["velocity"] + acceleration * dt,       # Euler step
+                "posY": max(0.0, last["posY"] + last["velocity"] * dt), # Euler step
                 "total_mass": total_mass,
             })
 
-    # Plot falls gewünscht
+    # Plot if requested
     if results and plotValues:
         times = [r["time"] for r in results]
-        # Mapping von Schlüssel zu Einheiten
+        # Mapping from key to units
         units = {
             "posY": "[m]",
             "velocity": "[m/s]",
