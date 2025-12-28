@@ -15,7 +15,7 @@ def start(values:dict) -> list[dict]:
         list[dict]: Time-discrete flight data used by the simulation.
     """
     set_values(values)
-    results = calculateValues(plotValues=False)
+    results = calculateValues(plotValues=False) # Hier auf true setzen, falls Plots der Größen gewünscht sind
     print("max height:", get_max_height(results))
     print("max velocity:", get_max_velocity(results))
     return results
