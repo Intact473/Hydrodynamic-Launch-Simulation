@@ -41,8 +41,9 @@ def run_window(start=None, stop=None):
         sim.start_pos_y = sim.rocket.pos.y
         print("start pos: ", sim.start_pos_y)
         sim.rocket_is_flying = True
-        if start:        
-            results = start(values)          # jetzt kommt was zurück
+        if start:  
+            # start is a callback reference to formulas.start, passed from main.py      
+            results = start(values)
             sim.results = results
             sim.time = 0.0
             sim.rocket_is_flying = True
