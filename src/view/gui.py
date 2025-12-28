@@ -2,7 +2,6 @@ import sys
 sys.dont_write_bytecode = True
 import pygame as pg
 import pygame_gui as gui
-import physic.formulas as formulas
 
 
 class ControlPanel:
@@ -15,9 +14,9 @@ class ControlPanel:
 
         x, y, w, h = gui_rect
         pad = 10
-        label_h = 24
-        input_h = 30
-        gap = 14 
+        label_h = 30
+        input_h = 34
+        gap = 10
 
         self.panel = gui.elements.UIPanel(
             relative_rect=pg.Rect(x, y, w, h),
@@ -109,7 +108,7 @@ class ControlPanel:
             output.rebuild() 
             cursor_y += input_h + gap
             return output
-        self.out_max_velocity = add_output_field("Max velocity [m/s]")
+        self.out_max_velocity = add_output_field("Impact velocity [m/s]")
         self.out_max_height = add_output_field("Max height [m]")
 
 

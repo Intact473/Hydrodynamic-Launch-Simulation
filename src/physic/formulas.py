@@ -1,24 +1,24 @@
 import math
 import matplotlib.pyplot as plt
-import view.window as vw
 import numpy as np
 
 gui_input_values = {}
-results = []
 
-def start(values:dict):
+def start(values:dict) -> list[dict]:
     """
-    Startet die Simulation mit den gegebenen Eingabewerten.
+    Executes the physical simulation and returns the computed flight curve.
 
     Args:
-        values (dict): Eingabeparameter, siehe calculateValues.
+        values (dict): Input parameters from the GUI.
+
+    Returns:
+        list[dict]: Time-discrete flight data used by the simulation.
     """
-    global results
     set_values(values)
-    results = calculateValues(plotValues=True)
+    results = calculateValues(plotValues=False) # Hier auf true setzen, falls Plots der Größen gewünscht sind
     print("max height:", get_max_height(results))
     print("max velocity:", get_max_velocity(results))
-    vw.get_sim().time = 0.0
+    return results
 
 def show_contour_plot(values:dict):
     """
@@ -30,15 +30,6 @@ def show_contour_plot(values:dict):
     set_values(values)
     try_combinations(min_nozzle_mm=1.0, max_nozzle_mm=40.0, step_nozzle_mm=1.0,
                      min_bottle_volume_l=0.1, max_bottle_volume_l=1.0, step_bottle_volume_l=0.025)
-
-def stop():
-    """
-    Stoppt die Simulation und setzt die Zeit zurück.
-
-    Args:
-        None
-    """
-    vw.get_sim().time = 0.0
 
 def set_values(values: dict):
     """
@@ -64,7 +55,7 @@ def get_max_height(results) -> float:
 
 def get_max_velocity(results) -> float:
     """
-    Gibt die maximale Geschwindigkeit aus der Ergebnisliste zurück.
+    Gibt die Auftreffgeschwindigkeit aus der Ergebnisliste zurück.
 
     Args:
         results (list): Liste von dicts mit Schlüssel 'velocity' [m/s]
@@ -72,7 +63,7 @@ def get_max_velocity(results) -> float:
     Returns:
         float: Maximale Geschwindigkeit [m/s]
     """
-    return max((abs(entry['velocity']) for entry in results), default=0.0)
+    return results[-1]['velocity'] if results else 0.0
 
 def try_combinations(min_nozzle_mm, max_nozzle_mm, step_nozzle_mm, min_bottle_volume_l, max_bottle_volume_l, step_bottle_volume_l):
     """
@@ -138,13 +129,13 @@ def Air_volume(total_volume, water_volume):
 
 def Pressure(P_0, V_0, V, kappa_gas):
     """
-    Berechnet den aktuellen Druck in der Flasche.
+    Berechnet die Druckentwicklung in der Flasche.
 
     Args:
         P_0 (float): Anfangsdruck [Pa]
         V_0 (float): Anfangsvolumen [m^3]
         V (float): aktuelles Volumen [m^3]
-        kappa_gas (float): Adiabatenexponent [dimensionslos]
+        kappa_gas (float): Adiabatenexponent [einheitslos]
 
     Returns:
         float: Druck [Pa]
@@ -245,13 +236,10 @@ def calculateValues(plotValues=False):
                 total_mass [kg]
                 usw.
     """
-    # Inputs und Einheitenumrechnung
     defaults = {
-        "pressure": 0, "bottle_volume": 0, "water_level_rocket": 0,
-        "empty_rocket_weight": 0, "thrust_nozzle_diameter": 0,
-        "kappa_gas": 1.4, "density_water": 1000.0, "P_atm": 101325.0,
-        "diameter_rocket": 0.10, "endTime": 5.0
+        "kappa_gas": 1.4, "density_water": 1000.0, "P_atm": 101325.0, "endTime": 5.0
     }
+    # Eingabewerte sammeln bzw. kombinieren
     inputs = {**defaults, **(gui_input_values or {})}
     try:
         bottle_vol = float(inputs["bottle_volume"])
@@ -267,7 +255,7 @@ def calculateValues(plotValues=False):
     except Exception:
         raise ValueError("One or more inputs are not numeric.")
 
-    # Validierung der Eingaben
+    # Validierung der Eingaben mit passender Fehlermeldung
     if bottle_vol <= 0:
         raise ValueError("bottle_volume must be > 0 (liters).")
     if water_lvl < 0:
@@ -306,8 +294,9 @@ def calculateValues(plotValues=False):
     })
 
     results = []
-    dt = 0.001
+    dt = 0.001  # 1 ms timestep
     steps = int(end_time / dt) + 1
+    # Berechnung der Werte für den initialen Zustand (Randbedingungen)
     nozzle_area = Thrust_nozzle_area(inputs["thrust_nozzle_diameter"])
     total_mass0 = inputs["empty_rocket_weight"] + inputs["density_water"] * inputs["water_level_rocket"]
     air_volume0 = max(inputs["bottle_volume"] - inputs["water_level_rocket"], 0.0)
@@ -318,7 +307,6 @@ def calculateValues(plotValues=False):
     gravity_force0 = Gravity_force(total_mass0)
     accel0 = (thrust0 - gravity_force0) / total_mass0 if total_mass0 > 0 else 0.0
 
-    # Initialer Zustand
     results.append({
         "time": 0.0,
         "air_volume": air_volume0,
@@ -341,8 +329,8 @@ def calculateValues(plotValues=False):
         time = step * dt
         last = results[-1]
         if last["posY"] <= 0.0 and step > 4:
-            break
-        if last["water_level"] <= 0.0:
+            break # Abbruch wenn Rakete wieder am Boden ist (step > 4 willkürlich gewählt, damit Anfangsposition ausgenommen wird)
+        if last["water_level"] <= 0.0 or last["pressure"] < inputs["P_atm"]:
             total_mass = inputs["empty_rocket_weight"]
             air_resistance = Air_Resistance(inputs["diameter_rocket"], last["velocity"])
             gravity_force = Gravity_force(total_mass)
@@ -365,9 +353,9 @@ def calculateValues(plotValues=False):
                 "water_level": 0.0,
                 "total_mass": total_mass,
             })
-        else:
+        else: # normale Berechnung
             mass_flow_prev = Mass_flow(inputs["density_water"], last["ejection_velocity"], nozzle_area)
-            water_level = max(0.0, last["water_level"] - (mass_flow_prev / inputs["density_water"]) * dt)
+            water_level = max(0.0, last["water_level"] - (mass_flow_prev / inputs["density_water"]) * dt)   # Euler Schritt
             air_volume = Air_volume(inputs["bottle_volume"], water_level)
             pressure = Pressure(inputs["pressure"], inputs["bottle_volume"] - inputs["water_level_rocket"], air_volume, inputs["kappa_gas"])
             ejection_velocity = Ejection_velocity(pressure, inputs["density_water"], inputs["P_atm"])
@@ -378,6 +366,7 @@ def calculateValues(plotValues=False):
             gravity_force = Gravity_force(total_mass)
             total_force = thrust_value - air_resistance - gravity_force
             acceleration = total_force / total_mass if total_mass > 0 else 0.0
+            # Ergebnisse speichern
             results.append({
                 "time": time,
                 "mass_flow_prev": mass_flow_prev,
@@ -391,14 +380,31 @@ def calculateValues(plotValues=False):
                 "gravity_force": gravity_force,
                 "total_force": total_force,
                 "acceleration": acceleration,
-                "velocity": last["velocity"] + acceleration * dt,
-                "posY": max(0.0, last["posY"] + last["velocity"] * dt),
+                "velocity": last["velocity"] + acceleration * dt,       # Euler Schritt
+                "posY": max(0.0, last["posY"] + last["velocity"] * dt), # Euler Schritt
                 "total_mass": total_mass,
             })
 
     # Plot falls gewünscht
     if results and plotValues:
         times = [r["time"] for r in results]
+        # Mapping von Schlüssel zu Einheiten
+        units = {
+            "posY": "[m]",
+            "velocity": "[m/s]",
+            "acceleration": "[m/s²]",
+            "thrust": "[N]",
+            "air_resistance": "[N]",
+            "gravity_force": "[N]",
+            "pressure": "[Pa]",
+            "water_level": "[m³]",
+            "air_volume": "[m³]",
+            "total_mass": "[kg]",
+            "mass_flow": "[kg/s]",
+            "ejection_velocity": "[m/s]",
+            "mass_flow_prev": "[kg/s]",
+            "total_force": "[N]",
+        }
         keys = [k for k in results[0].keys() if k != "time"]
         ncols = min(4, max(1, len(keys)))
         nrows = int(np.ceil(len(keys) / ncols))
@@ -406,7 +412,8 @@ def calculateValues(plotValues=False):
         axes = np.array(axes).flatten()
         for ax, key in zip(axes, keys):
             ax.plot(times, [r.get(key, 0.0) for r in results], linewidth=1)
-            ax.set_title(str(key))
+            unit = units.get(key, "")
+            ax.set_title(f"{key} {unit}".strip())
             ax.set_xlabel("time (s)")
             ax.grid(True)
         for ax in axes[len(keys):]:

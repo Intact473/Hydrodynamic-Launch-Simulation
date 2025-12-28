@@ -7,6 +7,7 @@ import physic.formulas as formulas
 Vec2 = pg.math.Vector2
 
 class Rocket:
+    
     def __init__(self,
                  length_rocket: float = 3.0,
                  radius_of_rocket_cylinder: float = 0.22,

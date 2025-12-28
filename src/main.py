@@ -8,6 +8,6 @@ from view import window
 
 if __name__ == "__main__":
     try:
-        window.run_window(start=formulas.start, stop=formulas.stop)
+        window.run_window(start=formulas.start)
     except ValueError as window_exception:
         print("Error while creating the window: ", window_exception)
