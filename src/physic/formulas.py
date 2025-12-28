@@ -31,15 +31,6 @@ def show_contour_plot(values:dict):
     try_combinations(min_nozzle_mm=1.0, max_nozzle_mm=40.0, step_nozzle_mm=1.0,
                      min_bottle_volume_l=0.1, max_bottle_volume_l=1.0, step_bottle_volume_l=0.025)
 
-def stop():
-    """
-    Stoppt die Simulation und setzt die Zeit zurück.
-
-    Args:
-        None
-    """
-    pass
-
 def set_values(values: dict):
     """
     Setzt die globalen Eingabewerte für die Simulation.

@@ -25,7 +25,7 @@ def get_sim():
     """Return the Simulation instance (or None if not created yet)."""
     return sim
 
-def run_window(start=None, stop=None):
+def run_window(start=None):
     """
     Main application loop.
     start and stop are callback functions provided by main.py.
@@ -62,8 +62,6 @@ def run_window(start=None, stop=None):
         sim.rocket.angle = math.radians(90.0)
         sim.start_pos_y = sim.rocket.pos.y
         sim.camera_center = Vec2(sim.rocket.pos) - Vec2(0, 2.0)
-        if stop:
-            stop()
 
     def handle_contour_plot(values):
         formulas.show_contour_plot(values=values)
