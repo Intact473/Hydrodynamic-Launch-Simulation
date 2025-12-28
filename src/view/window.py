@@ -26,7 +26,10 @@ def get_sim():
     return sim
 
 def run_window(start=None, stop=None):
-    """Run the main application window with a control panel and a simulation area."""
+    """
+    Main application loop.
+    start and stop are callback functions provided by main.py.
+    """
     running = True
     manager = gui.UIManager((WINDOW_W, WINDOW_H))
 
@@ -43,6 +46,7 @@ def run_window(start=None, stop=None):
         if start:  
             # start is a callback reference to formulas.start, passed from main.py      
             results = start(values)
+            # Initialize simulation state with computed flight curve
             sim.results = results
             sim.time = 0.0
             sim.rocket_is_flying = True
@@ -86,6 +90,7 @@ def run_window(start=None, stop=None):
         
         sim.update(dt_ms)
 
+        # Update GUI output fields after simulation has finished
         if not sim.rocket_is_flying and sim.results:
             max_v = formulas.get_max_velocity(sim.results)
             max_h = formulas.get_max_height(sim.results)

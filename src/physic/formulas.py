@@ -6,10 +6,13 @@ gui_input_values = {}
 
 def start(values:dict) -> list[dict]:
     """
-    Startet die Simulation mit den gegebenen Eingabewerten.
+    Executes the physical simulation and returns the computed flight curve.
 
     Args:
-        values (dict): Eingabeparameter, siehe calculateValues.
+        values (dict): Input parameters from the GUI.
+
+    Returns:
+        list[dict]: Time-discrete flight data used by the simulation.
     """
     set_values(values)
     results = calculateValues(plotValues=False)
