@@ -30,7 +30,7 @@ Durch den Rückstoß (3. Newtonsches Gesetz) wird die Rakete nach oben beschleun
 Danach fliegt die Rakete im freien Fall weiter, bis sie schließlich wieder am Boden aufschlägt. 
 Ein Fallschirm kann zur sicheren Landung beitragen, diesen haben wir jedoch nicht in unsere Simulation integriert.
 
-\begin{figure}[h!]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.5\textwidth]{wasserrakete_schematisch.png}
     \caption{Schematischer Aufbau einer Wasserrakete.}
@@ -180,7 +180,7 @@ vier funktionalen Bereichen: \textbf{Controller}, \textbf{View},
 \textbf{Simulation} und \textbf{Physik/Modell}. 
 Der gesamte Datenfluss zwischen diesen Komponenten ist in Abbildung~\ref{fig:architektur} dargestellt.
 
-\begin{figure}[H]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.95\textwidth]{Simtools_architektur.png}
     \caption{Datenfluss zwischen den Modulen der Wasserraketen-Simulation.}
@@ -242,7 +242,7 @@ unterteilt: links befindet sich das Einstellungsmenü, rechts wird die
 Rakete in der Simulationsumgebung dargestellt (siehe Abbildung~\ref{fig:gui}).\footnote{Um einen reibungslosen optischen Ablauf des Programms zu gewährleisten, wird eine Bildschirmauflösung von mindestens 1680 x 1050 Pixel empfohlen.
 }
 
-\begin{figure}[H]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=1\textwidth]{Simtools_gui.png}
     \caption{Grafische Benutzeroberfläche der Wasserraketen-Simulation.}
@@ -327,7 +327,7 @@ Obwohl vermutlich der Schwerpunkt der Rakete die gebräuchlichste Wahl ist, habe
 Um die Auftreffgeschwindigkeit zu bestimmen, haben wir den letzten Eintrag der Geschwindigkeit in der Ergebnisliste verwendet, also die Geschwindigkeit kurz vor dem Aufprall auf den Boden.
 \subsection{Maximale Höhe und Auftreffgeschwindigkeit}
 Für unsere gewählten Standard-Parameter (siehe Tabelle~\ref{tab:standardparameter}) ergaben sich folgende Ergebnisse aus der Simulation (Abbildung~\ref{fig:simulation_plot}):
-\begin{table}[h!]
+\begin{table}[ht]
     \centering
     \begin{tabular}{lcl}
         \textbf{Parameter} & \textbf{Symbol} & \textbf{Wert} \\
@@ -355,7 +355,7 @@ Danach befindet sich die Rakete im freien Fall, wobei Luftwiderstand und Gewicht
 Da die Rakete immernoch eine Geschwindigkeit nach oben besitzt, steigt sie noch weiter. Nach ca. \(2\,\mathrm{s}\) erreicht sie ihre maximale Höhe von \(21{,}05\,\mathrm{m}\) und beginnt den Abgang.
 Nun geht die Geschwindigkeit der Rakete in den negativen Bereich über, bis sie nach ca. \(4{,}3\,\mathrm{s}\) schließlich wieder mit \(15{,}75\,\mathrm{m/s}\) (\texttt{velocity}) auf den Boden auftrifft.
 
-\begin{figure}[H]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=1\textwidth]{Values_standard_parameters.png}
     \caption{Relevante Größen der Rakete über die Zeit für Standard-Parameter.}
@@ -374,7 +374,7 @@ Alle anderen Parameter wurden gemäß Tabelle~\ref{tab:standardparameter} konsta
 
 Es ergab sich der Konturplot in Abbildung~\ref{fig:konturplot}. 
 Hierbei lässt sich erkennen, dass ein Füllstand von ca. \(0{,}45\,\mathrm{l}\) mit einem Düsendurchmesser ab \(d_\text{nozzle} \geq 7{,}5 \,\mathrm{mm}\) die maximale Höhe von ca. \(21-23\,\mathrm{m}\) erreicht.
-\begin{figure}[H]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.7\textwidth]{Contour_Plot_1ms.png}
     \caption{Maximale Höhe der Rakete in Abhängigkeit von Wasserfüllstand und Düsendurchmesser. (\(\Delta t = 1\, \mathrm{ms}\))}
@@ -387,7 +387,7 @@ Diese kann über eine Schrittweite von \(\Delta t = 1\,\mathrm{ms}\) nicht genau
 
 Um dieses Problem zu lösen, haben wir den Konturplot~\ref{fig:konturplot_genauer} mit einer Schrittweite von \(\Delta t = 0{,}2\,\mathrm{ms}\) erstellt.
 Hier sind die numerischen Ungenauigkeiten deutlich reduziert und die erreichte Höhe wird auch minimal kleiner.
-\begin{figure}[H]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.7\textwidth]{Contour_Plot_02ms.png}
     \caption{Maximale Höhe der Rakete in Abhängigkeit von Wasserfüllstand und Düsendurchmesser. (\(\Delta t = 0{,}2\, \mathrm{ms}\))}
