@@ -197,16 +197,12 @@ und übernimmt die Initialisierung sowie die Übergabe der
 Callback-Funktionen.
 
 \paragraph{View}
-Die grafische Benutzeroberfläche besteht aus zwei Modulen:
-\begin{itemize}
-    \item \texttt{view/window.py}: verwaltet das Hauptfenster, Pygame-Events,
-          den Simulations-Loop und die Übergabe von Zeitintervallen (\texttt{dt\_ms})
-          an die Simulation.
-    \item \texttt{view/gui.py}: enthält die Eingabewerte des Nutzers in Form 
-          eines \texttt{values}-Dictionaries, das über die Callback-Funktionen
-          \texttt{on\_start()} bzw. \texttt{on\_contour\_plot()} an 
-          \texttt{window.py} übergeben wird.
-\end{itemize}
+Die grafische Benutzeroberfläche besteht aus dem Modul \texttt{view/gui.py}.
+Dieses stellt die Eingabefelder und Ausgabeelemente bereit und sammelt die
+Eingaben des Nutzers in Form eines \texttt{values}-Dictionaries, das über
+Callback-Funktionen an \texttt{window.py} übergeben wird.
+Die Erstellung des Anwendungsfensters und die Einbettung der Benutzeroberfläche
+erfolgen innerhalb von \texttt{window.py}.
 
 \paragraph{Physikalisches Modell}
 Das Modul \texttt{physics/formulas.py} führt die physikalischen Berechnungen der
