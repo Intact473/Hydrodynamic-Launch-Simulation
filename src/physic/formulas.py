@@ -15,9 +15,9 @@ def start(values:dict) -> list[dict]:
         list[dict]: Time-discrete flight data produced by the simulation.
     """
     set_values(values)
-    results = calculateValues(showPlotValues=False)  # Set to True if plots of quantities are desired
+    results = calculateValues(showPlotValues=False)  # Set to True if plots are desired
     print("max height:", get_max_height(results))
-    print("max velocity:", get_max_velocity(results))
+    print("max velocity:", get_impact_velocity(results))
     return results
 
 def show_contour_plot(values:dict):
@@ -53,7 +53,7 @@ def get_max_height(results) -> float:
     """
     return max((entry['posY'] for entry in results), default=0.0)
 
-def get_max_velocity(results) -> float:
+def get_impact_velocity(results) -> float:
     """
     Return the impact velocity from the results list.
 

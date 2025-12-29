@@ -24,11 +24,11 @@ Betreuer: Prof. Dr. Peter Jonas}
 Der Körper einer Wasserrakete besteht typischerweise aus einer stabilen Kunststoffflasche (z.B. 1-Liter-Fanta-Flasche), die teilweise mit Wasser gefüllt wird (siehe Abbildung~\ref{fig:wasserrakete}). 
 Anschließend wird die übrige Luft in der Flasche unter Druck gesetzt.
 Die Flasche dient als Druckbehälter und gleichzeitig als Raketenkörper.
-Die Öffnung der Flasche fungiert als Düse, hier wird also das Wasser durch die mit Überdruck versetzte Luft ausgestoßen.
+Die Öffnung der Flasche fungiert als Düse; hieraus wird also das Wasser durch die mit Überdruck versetzte Luft ausgestoßen.
 Durch den Rückstoß (3. Newtonsches Gesetz) wird die Rakete nach oben beschleunigt, bis das gesamte Wasser ausgestoßen wurde, oder die Luft keinen Überdruck mehr hat.
 
 Danach fliegt die Rakete im freien Fall weiter, bis sie schließlich wieder am Boden aufschlägt. 
-Ein Fallschirm kann zur sicheren Landung beitragen, diesen haben wir jedoch nicht in unsere Simulation integriert.
+Ein Fallschirm kann zur sicheren Landung beitragen, dieser wurde jedoch nicht in die Simulation integriert.
 
 \begin{figure}[ht]
     \centering
@@ -42,7 +42,7 @@ Ein Fallschirm kann zur sicheren Landung beitragen, diesen haben wir jedoch nich
 % \textcolor{lightgray}{Vor dem Start wird die Rakete auf eine Startrampe gesetzt und mit einer Düse verschlossen. Über ein Ventil wird Luft in die Flasche gepumpt, wodurch sich der Druck im Inneren erhöht. Das Wasser fungiert als Reaktionsmasse.}
 % \textcolor{lightgray}{Beim Auslösen des Starts öffnet sich die Düse, und das unter Druck stehende Wasser wird mit hoher Geschwindigkeit nach hinten ausgestoßen. Nach dem Rückstoßprinzip (3. Newtonsches Gesetz) erfährt die Rakete eine entgegengesetzte Beschleunigung und hebt ab.}
 
-Die Flugbahn der Rakete wird durch verschiedene Faktoren beeinflusst:
+Die Flugbahn der Rakete wird durch verschiedene Faktoren beeinflusst. Zum Beispiel:
 \begin{itemize}
     \item Leergewicht der Rakete
     \item Füllmenge des Wassers
@@ -51,18 +51,16 @@ Die Flugbahn der Rakete wird durch verschiedene Faktoren beeinflusst:
     \item Aerodynamik des Raketenkörpers
 \end{itemize}
 
-
-
 \section{Mathematisch-Physikalisches Modell}
 Die Bewegung der Wasserrakete wird durch verschiedene physikalische Prozesse bestimmt. 
-Wir haben uns bewusst für ein vereinfachtes Modell entschieden, das die wesentlichen Aspekte des Raketenflugs erfasst, ohne zu komplex zu werden. 
+Die Simulation stellt bewusst eine vereinfachte physikalische Modellierung dar, die die wesentlichen Aspekte des Raketenflugs erfasst, ohne zu komplex zu werden. 
 Beispielsweise werden Effekte wie Turbulenzen und komplexe Strömungsdynamiken vernachlässigt.
-Im Folgenden werden die Gleichungen aufgeführt, die in unserem Modell verwendet werden.
+Im Folgenden werden die Gleichungen aufgeführt, die in dem Modell verwendet werden.
 
 (Hinweis: Zeitabhängige Größen sind mit \( (t) \) gekennzeichnet.)
 
 \subsection{Druckentwicklung}
-Das Volumen der Luft in der Flasche ändert sich während des Ausstoßes des Wassers, wofür zwei verschiedene Gleichungen in Frage kommen:
+Der Luftdruck in der Flasche ändert sich während des Ausstoßes des Wassers, da sich die Luft ausdehnt. Um den Druckverlauf zu beschreiben, kommen zwei verschiedene Gleichungen in Frage:
 
 \begin{itemize}   
     \item Die isotherme Zustandsänderung (Temperaturänderung \(\Delta T = 0\)) \cite{formelsammlung2024}:       % Seite 138/139
@@ -73,20 +71,20 @@ Das Volumen der Luft in der Flasche ändert sich während des Ausstoßes des Was
         \label{eq:adiabatisch}
     \end{equation}
 \end{itemize}
-Dabei ist $p_0$ der Anfangsdruck, $V_0$ das Anfangsvolumen der Luft, $p_1(t)$ bzw. $V_1(t)$ die Größen nach der Expansion und $\kappa$ der Adiabatenexponent (für Luft $\kappa \approx 1{,}4$).
+Dabei ist $p_0$ der absolute Anfangsdruck in der Flasche (nicht Überdruck), $V_0$ das Anfangsvolumen der Luft, $p_1(t)$ bzw. $V_1(t)$ die Größen nach der Expansion und $\kappa$ der Adiabatenexponent (für Luft $\kappa \approx 1{,}4$).
 
-Wir haben uns für die adiabatische Zustandsänderung~\eqref{eq:adiabatisch} entschieden, da der Druckabfall in der kurzen Zeit des Ausstoßes schneller erfolgt als der Wärmeaustausch mit der Umgebung.
+Da der Druckabfall in der kurzen Zeit des Ausstoßes schneller erfolgt, als der Wärmeaustausch mit der Umgebung (somit \(\Delta Q \approx 0\)), eignet sich für die Simulation die adiabatische Zustandsänderung~\eqref{eq:adiabatisch} besser.
 
 \subsection{Ausstoßgeschwindigkeit des Wassers}
 Die Geschwindigkeit \(v_e\), mit der das Wasser durch die Düse ausgestoßen wird, ergibt sich aus der Bernoulli-Gleichung \cite{formelsammlung2024}: % Seite 84
-\begin{equation}
+\begin{equation*}
     \underbrace{\frac{1}{2} \rho_{\mathrm{W}} \, v_{\text{innen}}^2(t)}_{\text{Staudruck}}
-    + \underbrace{\rho_{\mathrm{W}} \, (g + a(t)) \, h_{\mathrm{W}}}_{\text{Schweredruck}}
+    + \underbrace{\rho_{\mathrm{W}} \, (g + a(t)) \, h_{\mathrm{W}}}_{\text{Schweredruck innen}}
     + \underbrace{p(t)}_{\text{Kolbendruck}}
     = \frac{1}{2} \rho_{\mathrm{W}} \, v_e^2(t)
-    + \underbrace{\rho_{\mathrm{W}} \, (g + a(t)) \, h_{\text{außen}}}_{= \, 0}
+    + \underbrace{\rho_{\mathrm{W}} \, (g + a(t)) \, h_{\text{außen}}}_{\text{Schweredruck außen}}
     + p_{\text{atm}}
-\end{equation}
+\end{equation*}
 Umgestellt nach \(v_e(t)\) ergibt sich unter Vernachlässigung des Schweredrucks, und mit \(v_{\text{innen}} = 0\):
 \begin{equation}
 v_e(t) = \sqrt{\frac{2\,(p(t) - p_{\text{atm}})}{\rho_{\mathrm{W}}}}
@@ -111,7 +109,8 @@ F_{\text{thrust}}(t) = \dot{m}_e(t) \, v_e(t)
 \end{equation}
 
 \subsection{Kräftebilanz mit Luftwiderstand und Gewichtskraft}
-Die Rakete erfährt neben dem Schub auch Luftwiderstand und Gewichtskraft, die dem Schub entgegenwirken:
+Die gesamte auf die Rakete wirkende Kraft \(F_{\text{gesamt}}(t)\) setzt sich aus der Schubkraft \(F_{\text{thrust}}(t)\), dem Luftwiderstand \(F_{\text{drag}}(t)\) und der Gewichtskraft \(F_{\text{G}}(t)\) zusammen. 
+Der Luftwiderstand wirkt der Bewegungsrichtung stets entgegen, während die Gewichtskraft immer nach unten wirkt. Deshalb werden diese beiden Kräfte von der Schubkraft subtrahiert:
 \begin{equation}
 F_{\text{gesamt}}(t) = F_{\text{thrust}}(t) - F_{\text{drag}}(t) - F_{\text{G}}(t)\\[4pt]
 \end{equation}
@@ -121,11 +120,13 @@ F_{\text{gesamt}}(t) = - F_{\text{drag}}(t) - F_{\text{G}}(t)
 \end{equation}
 Der Luftwiderstand wird mit folgender Formel abgeschätzt \cite{formelsammlung2024}: % Seite 89
 \begin{equation}
-F_{\text{drag}}(t) = \tfrac{1}{2}\,C_d \,\rho_{\mathrm{Luft}} \,A_{\text{Quer}}\, v^2(t)
+F_{\text{drag}}(t) = \tfrac{1}{2}\,C_d \,\rho_{\mathrm{Luft}} \,A_{\text{Quer}}\, v(t)\,|v(t)|,
 \end{equation}
 Dabei ist \(C_d\) der Luftwiderstandskoeffizient (hier: \(C_d \approx 1\)), \(\rho_{\mathrm{Luft}}\) die Dichte der Luft, \(A_{\text{Quer}}\) die Querschnittsfläche der Rakete senkrecht zur Flugrichtung (effektive Fläche) und \(v\) die Geschwindigkeit der Rakete.
 
-Die Gewichtskraft \(F_{\text{G}}(t)\) der Rakete schreiben wir als:
+Der Betrag \( |v(t)| \) stellt sicher, dass die Widerstandskraft immer der Bewegungsrichtung entgegengesetzt wirkt. Ein einfaches \(v(t)^2\) würde dies nicht gewährleisten, da das Quadrat immer positiv ist.
+
+Die Gewichtskraft \(F_{\text{G}}(t)\) der Rakete lautet:
 \begin{equation}
 F_{\text{G}}(t) = m(t) \cdot g
 \end{equation}
@@ -138,24 +139,26 @@ Die Bewegungsgleichungen für die Rakete lauten:
     a(t) &= \frac{F_{\text{gesamt}}(t)}{m(t)}
 \end{align}
 
-\subsection{Gesamtes DGL-System}
-Bei dem DGL-System handelt es sich um gekoppelte Differentialgleichungen, da die rechte Seite mindestens einer Differentialgleichung von anderen unbekannten Funktionen abhängt.
-Konkret hängt $\dot{h}$ von $v$, $\dot{v}$ sowohl von $v$ als auch von $V_w$, und $\dot{V}_w$ implizit über den Druck ebenfalls von $V_w$ ab. Da sich die Größen wechselseitig beeinflussen, können die Gleichungen nicht unabhängig voneinander gelöst werden.
+mit der Höhe \(h(t)\), der Geschwindigkeit \(v(t)\), der Beschleunigung \(a(t)\) und der Gesamtmasse \(m(t)\) der Rakete.
 
+\subsection{Gesamtes DGL-System}
 Das gesamte DGL-System lautet (Formeln für Hilfsgrößen wie \(F_{\mathrm{thrust}}\) etc. siehe oben.):
 \begin{align*}
     \dot h(t) &= \textcolor{red}{v(t)},\\[4pt]
-    \textcolor{red}{\dot v(t)} &= \dfrac{F_{\mathrm{gesamt}}(t)}{m(t)} = \dfrac{F_{\mathrm{thrust}}(t) - F_{\mathrm{drag}}(v(t)) - F_{\mathrm{G}}(t)}{m_{\mathrm{empty}} + \rho_{\mathrm{W}}\,\textcolor{blue}{V_w(t)}},\\[6pt]
+    \textcolor{red}{\dot v(t)} &= \dfrac{F_{\mathrm{gesamt}}(t)}{m(t)} = \dfrac{F_{\mathrm{thrust}}(t) - F_{\mathrm{drag}}(\textcolor{red}{v(t)}) - F_{\mathrm{G}}(t)}{m_{\mathrm{empty}} + \rho_{\mathrm{W}}\,\textcolor{blue}{V_w(t)}},\\[6pt]
     \textcolor{blue}{\dot V_w(t)} &= -\dfrac{\dot m_e(t)}{\rho_{\mathrm{W}}}\\[6pt]
 \end{align*}
 Mit den Anfangsbedingungen:
 \begin{align*}
 h(t=0)&=0,\qquad v(t=0)=0,\qquad V_w(t=0)=V_{w,0}.
 \end{align*}
+Bei dem DGL-System handelt es sich um gekoppelte Differentialgleichungen, da die rechte Seite mindestens einer Differentialgleichung von anderen unbekannten Funktionen abhängt.
+Konkret hängt $\dot{h}$ von $v$, $\dot{v}$ sowohl von $v$ als auch von $V_w$, und $\dot{V}_w$ implizit über den Druck ebenfalls von $V_w$ ab. Da sich die Größen wechselseitig beeinflussen, können die Gleichungen nicht unabhängig voneinander gelöst werden.
+
 
 \section{Implementierung des Modells}
 \subsection{Numerische Methoden}
-Um das Differentialgleichungssystem für die Höhe der Rakete zu lösen, haben wir die Vorwärts-Euler-Methode für Differentialgleichungen angesetzt.
+Um das Differentialgleichungssystem für die Höhe der Rakete \(h(t)\) zu lösen, wird die Vorwärts-Euler-Methode für Differentialgleichungen genutzt.
 Hierbei berechnet man die Ableitung an der aktuellen Stelle und nutzt diese, um den nächsten Wert zu approximieren.
 
 Beispiel für Gleichung:
@@ -171,7 +174,7 @@ Berechne \(h\) an der nächsten Stelle \(t_1 = t_0 + \Delta t\) (lineare Approxi
     h(t_1) \approx h(t_0) + \dot h(t_0) \cdot \Delta t 
 \end{equation*}
 
-Bei unserer Simulation haben wir uns für ein Zeitintervall von \(\Delta t = 1\,\mathrm{ms}\) entschieden, um eine gute Balance zwischen Genauigkeit und Rechenzeit zu gewährleisten.
+Bei der Simulation ist ein Zeitintervall von \(\Delta t = 1\,\mathrm{ms}\) passend, um eine gute Balance zwischen Genauigkeit und Rechenzeit zu gewährleisten.
 
 \subsection{Aufbau des Programms}
 
@@ -212,7 +215,7 @@ Wasserrakete durch. Beim Start der Simulation werden die Eingabewerte des GUIs �
 Flugkurve der Rakete und gibt diese als Rückgabewert (\texttt{results}) an
 \texttt{window.py} zurück.
 Zusätzlich stellt das Modul Hilfsfunktionen zur Auswertung der Ergebnisse bereit,
-wie \texttt{get\_max\_height()} und \texttt{get\_max\_velocity()}.
+wie \texttt{get\_max\_height()} und \texttt{get\_impact\_velocity()}.
 
 \paragraph{Simulation}
 Das Modul \texttt{simulation/simulation.py} bildet die zentrale Simulationslogik.
@@ -257,12 +260,12 @@ Simulation frei angepasst werden.
 \begin{itemize}
     \item \textbf{Volume PET [l]}  
           Gesamtvolumen der PET-Flasche, also des Druckbehälters.
-    \item \textbf{Pressure [bar]}  
-          Anfangsdruck der eingeschlossenen Luft vor dem Start.
+    \item \textbf{Pressure [bar]}
+          Anfangsdruck der eingeschlossenen Luft vor dem Start. Hierbei handelt es sich um den absoluten Druck in der Flasche, nicht um den Überdruck gegenüber der Umgebung.
     \item \textbf{Weight empty rocket [kg]}  
           Leergewicht der Rakete ohne Wasser.
     \item \textbf{Thrust nozzle d [mm]}  
-          Durchmesser der Düse, durch die Wasser ausgestoßen wird.
+          Durchmesser der (runden) Düse, durch die Wasser ausgestoßen wird.
     \item \textbf{water\_level\_rocket [l]}  
           Anfangsfüllmenge des Wassers in der Rakete.
     \item \textbf{Rocket diameter [m]}  
@@ -285,9 +288,11 @@ Ungültige oder fehlende Eingaben verhindern den Start der Simulation.
           bleiben unverändert, die Rakete wird auf Bodenhöhe positioniert.
 
     \item \textbf{Show Contour plot}  
-          Erzeugt einen Konturplot, der die maximale Höhe der Rakete
-          in Abhängigkeit von Düsendurchmesser und Wasserfüllstand zeigt.
-          Dazu werden die aktuellen Eingabewerte verwendet.
+        Erzeugt einen Konturplot, der die maximale Höhe der Rakete
+        in Abhängigkeit von Düsendurchmesser und Wasserfüllstand zeigt.
+        Dazu werden die aktuellen Eingabewerte verwendet.
+        Der Düsendurchmesser wird dabei von $1{,}0\,\mathrm{mm}$ bis $40{,}0\,\mathrm{mm}$ in Schritten von $1{,}0\,\mathrm{mm}$ variiert,
+        der Wasserfüllstand von $0{,}1\,\mathrm{l}$ bis $1{,}0\,\mathrm{l}$ in Schritten von $0{,}025\,\mathrm{l}$.
 \end{itemize}
 
 \subsection{Ausgabeparameter}
@@ -316,15 +321,15 @@ Boden markiert die Start- und Aufprallposition.
 Während der Simulation aktualisieren sich Höhe, Geschwindigkeit und
 Rotation der Rakete in Echtzeit.
 \section{Simulationsergebnisse}
-Um die Simulationsergebnisse auswerten zu können, mussten wir uns zuerst überlegen, an welcher Stelle der Rakete wir die Höhe messen. Zur Entscheidung standen:
+Um die Simulationsergebnisse auswerten zu können, war die Frage offen, an welcher Stelle der Rakete die Höhe gemessen wird. Zur Entscheidung standen:
 \begin{itemize}
     \item Spitze der Rakete
     \item Schwerpunkt der Rakete
     \item Boden der Rakete
 \end{itemize}
-Obwohl vermutlich der Schwerpunkt der Rakete die gebräuchlichste Wahl ist, haben wir uns der Einfachheit halber für den Boden der Rakete entschieden, da sich der Schwerpunkt der Rakete während des Fluges durch das Ausstoßen des Wassers kontinuierlich ändert.
+Obwohl der Schwerpunkt der Rakete üblicherweise als Referenzpunkt gewählt wird, wurde hier aus Gründen der Einfachheit der Boden der Rakete verwendet, da sich der Schwerpunkt während des Fluges durch das Ausstoßen des Wassers kontinuierlich verschiebt.
 
-Um die Auftreffgeschwindigkeit zu bestimmen, haben wir den letzten Eintrag der Geschwindigkeit in der Ergebnisliste verwendet, also die Geschwindigkeit kurz vor dem Aufprall auf den Boden.
+Zur Bestimmung der Auftreffgeschwindigkeit dient der letzte Eintrag der Geschwindigkeit in der Ergebnisliste \texttt{results}, also die Geschwindigkeit unmittelbar vor dem Aufprall auf den Boden.
 \subsection{Maximale Höhe und Auftreffgeschwindigkeit}
 Für unsere gewählten Standard-Parameter (siehe Tabelle~\ref{tab:standardparameter}) ergaben sich folgende Ergebnisse aus der Simulation (Abbildung~\ref{fig:simulation_plot}):
 \begin{table}[ht]
@@ -362,8 +367,8 @@ Nun geht die Geschwindigkeit der Rakete in den negativen Bereich über, bis sie 
     \label{fig:simulation_plot}
 \end{figure}
 \subsection{Optimaler Wasserfüllstand und Düsendurchmesser}
-Um eine Beziehung zwischen Füllstand, Düsengröße und maximaler Höhe herzustellen, haben wir verschiedene Simulationen mit unterschiedlichen Parametern durchgeführt.
-Dabei haben wir folgende Wertebereiche verwendet:
+Um eine Beziehung zwischen Füllstand, Düsengröße und maximaler Höhe herzustellen, wurde die Simulationen mit unterschiedlichen Parametern durchgeführt.
+Dabei wurden folgende Wertebereiche verwendet:
 
 \begin{itemize}
     \item Wasserfüllstand: von $0{,}1\,\mathrm{l}$ bis $1{,}0\,\mathrm{l}$ in Schritten von $0{,}025\,\mathrm{l}$
@@ -385,7 +390,7 @@ Bei größeren Düsendurchmessern sind im Plot~\ref{fig:konturplot} numerische U
 Das liegt daran, dass hier das Wasser sehr schnell ausgestoßen wird, was eine sehr kurze Schubphase zur Folge hat. 
 Diese kann über eine Schrittweite von \(\Delta t = 1\,\mathrm{ms}\) nicht genau abgebildet werden.
 
-Um dieses Problem zu lösen, haben wir den Konturplot~\ref{fig:konturplot_genauer} mit einer Schrittweite von \(\Delta t = 0{,}2\,\mathrm{ms}\) erstellt.
+Um dieses Problem zu lösen, wurde der Konturplot~\ref{fig:konturplot_genauer} mit einer deutlich geringeren Schrittweite von \(\Delta t = 0{,}2\,\mathrm{ms}\) erstellt.
 Hier sind die numerischen Ungenauigkeiten deutlich reduziert und die erreichte Höhe wird auch minimal kleiner.
 \begin{figure}[H]
     \centering

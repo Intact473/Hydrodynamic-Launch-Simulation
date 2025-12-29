@@ -91,7 +91,7 @@ def run_window(start=None):
 
         # Update GUI output fields after simulation has finished
         if not sim.rocket_is_flying and sim.results:
-            max_v = formulas.get_max_velocity(sim.results)
+            max_v = formulas.get_impact_velocity(sim.results)
             max_h = formulas.get_max_height(sim.results)
             panel.out_max_velocity.set_text(f"{max_v:.2f}")
             panel.out_max_height.set_text(f"{max_h:.2f}")
