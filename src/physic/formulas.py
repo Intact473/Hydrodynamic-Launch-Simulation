@@ -15,7 +15,7 @@ def start(values:dict) -> list[dict]:
         list[dict]: Time-discrete flight data produced by the simulation.
     """
     set_values(values)
-    results = calculateValues(plotValues=False)  # Set to True if plots of quantities are desired
+    results = calculateValues(showPlotValues=False)  # Set to True if plots of quantities are desired
     print("max height:", get_max_height(results))
     print("max velocity:", get_max_velocity(results))
     return results
@@ -87,7 +87,7 @@ def try_combinations(min_nozzle_mm, max_nozzle_mm, step_nozzle_mm, min_bottle_vo
         for j, water_level in enumerate(water_level_values):
             gui_input_values["thrust_nozzle_diameter"] = thrust
             gui_input_values["water_level_rocket"] = round(water_level, 5)
-            results = calculateValues(plotValues=False)
+            results = calculateValues(showPlotValues=False)
             max_heights[i, j] = get_max_height(results)
             print(f"Thrust Nozzle Diameter: {thrust} mm, Water Level: {water_level} l => Max Height: {max_heights[i, j]:.2f} m")
 
@@ -213,12 +213,12 @@ def Gravity_force(mass):
     """
     return mass * 9.81
 
-def calculateValues(plotValues=False):
+def calculateValues(showPlotValues=False):
     """
     Run the rocket simulation.
 
     Args:
-        plotValues (bool): If True, results will be plotted.
+        showPlotValues (bool): If True, results will be plotted.
     
     Returns:
         list: List of dicts with the time evolution of the simulation.
@@ -386,7 +386,7 @@ def calculateValues(plotValues=False):
             })
 
     # Plot if requested
-    if results and plotValues:
+    if results and showPlotValues:
         times = [r["time"] for r in results]
         # Mapping from key to units
         units = {
