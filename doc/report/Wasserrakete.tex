@@ -179,8 +179,8 @@ Bei der Simulation ist ein Zeitintervall von \(\Delta t = 1\,\mathrm{ms}\) passe
 \subsection{Aufbau des Programms}
 
 Die Struktur des Programms basiert auf einer klar getrennten Architektur mit
-vier funktionalen Bereichen: \textbf{Controller}, \textbf{View}, 
-\textbf{Simulation} und \textbf{Physik/Modell}. 
+vier funktionalen Bereichen: Controller, View, 
+Simulation und Physikalisches Modell. 
 Der gesamte Datenfluss zwischen diesen Komponenten ist in Abbildung~\ref{fig:architektur} dargestellt.
 
 \begin{figure}[ht]
@@ -191,24 +191,23 @@ Der gesamte Datenfluss zwischen diesen Komponenten ist in Abbildung~\ref{fig:arc
 \end{figure}
 
 \paragraph{Controller}
-Der Einstiegspunkt des Programms ist \texttt{main.py}. 
-Hier werden die Funktionsobjekte \texttt{start} und \texttt{stop} aus 
-\texttt{formulas.py} an die Fensterlogik \texttt{window.py} übergeben. 
-Weitere Berechnungen oder Datenverarbeitungen finden an dieser Stelle nicht statt.
+Die zentrale Ablaufsteuerung des Programms befindet sich in
+\texttt{view/window.py}. Dieses Modul verarbeitet GUI-Ereignisse,
+ruft die Physikberechnung über die Callback-Funktion
+\texttt{start(values)} auf und übergibt die resultierende Flugkurve
+an die Simulation. \texttt{main.py} dient lediglich als Einstiegspunkt
+und übernimmt die Initialisierung sowie die Übergabe der
+Callback-Funktionen.
 
 \paragraph{View}
-Die grafische Benutzeroberfläche besteht aus zwei Modulen:
-\begin{itemize}
-    \item \texttt{view/window.py}: verwaltet das Hauptfenster, Pygame-Events,
-          den Simulations-Loop und die Übergabe von Zeitintervallen (\texttt{dt\_ms})
-          an die Simulation.
-    \item \texttt{view/gui.py}: enthält die Eingabewerte des Nutzers in Form 
-          eines \texttt{values}-Dictionaries, das über die Callback-Funktionen
-          \texttt{on\_start()} bzw. \texttt{on\_contour\_plot()} an 
-          \texttt{window.py} übergeben wird.
-\end{itemize}
+Die grafische Benutzeroberfläche besteht aus dem Modul \texttt{view/gui.py}.
+Dieses stellt die Eingabefelder und Ausgabeelemente bereit und sammelt die
+Eingaben des Nutzers in Form eines \texttt{values}-Dictionaries, das über
+Callback-Funktionen an \texttt{window.py} übergeben wird.
+Die Erstellung des Anwendungsfensters und die Einbettung der Benutzeroberfläche
+erfolgen innerhalb von \texttt{window.py}.
 
-\paragraph{Physik/Modell}
+\paragraph{Physikalisches Modell}
 Das Modul \texttt{physics/formulas.py} führt die physikalischen Berechnungen der
 Wasserrakete durch. Beim Start der Simulation werden die Eingabewerte des GUIs über
 \texttt{start(values)} übernommen. Die Funktion berechnet daraus die zeitdiskrete
@@ -258,17 +257,17 @@ und ihre Umgebung definieren. Alle Werte können vor dem Start der
 Simulation frei angepasst werden.
 
 \begin{itemize}
-    \item \textbf{Volume PET [l]}  
+    \item \textbf{Volume PET [l]:}  
           Gesamtvolumen der PET-Flasche, also des Druckbehälters.
-    \item \textbf{Pressure [bar]}
+    \item \textbf{Pressure [bar]:}
           Anfangsdruck der eingeschlossenen Luft vor dem Start. Hierbei handelt es sich um den absoluten Druck in der Flasche, nicht um den Überdruck gegenüber der Umgebung.
-    \item \textbf{Weight empty rocket [kg]}  
+    \item \textbf{Weight empty rocket [kg]:}  
           Leergewicht der Rakete ohne Wasser.
-    \item \textbf{Thrust nozzle d [mm]}  
+    \item \textbf{Thrust nozzle d [mm]:}  
           Durchmesser der (runden) Düse, durch die Wasser ausgestoßen wird.
-    \item \textbf{water\_level\_rocket [l]}  
+    \item \textbf{water\_level\_rocket [l]:}  
           Anfangsfüllmenge des Wassers in der Rakete.
-    \item \textbf{Rocket diameter [m]}  
+    \item \textbf{Rocket diameter [m]:}  
           Außendurchmesser der Rakete, relevant für Luftwiderstand.
 \end{itemize}
 
@@ -278,16 +277,16 @@ Ungültige oder fehlende Eingaben verhindern den Start der Simulation.
 \subsection{Buttons}
 
 \begin{itemize}
-    \item \textbf{Start}  
+    \item \textbf{Start:}  
           Beginnt die Simulation. Die eingegebenen Parameter werden in
           einem \texttt{values}-Dictionary gesammelt und an die 
           Simulationslogik übergeben. Anschließend wird die Rakete in Echtzeit animiert.
           
-    \item \textbf{Reset}  
+    \item \textbf{Reset:}  
           Setzt die Ansicht und alle Anzeigen zurück. Die Eingabewerte
           bleiben unverändert, die Rakete wird auf Bodenhöhe positioniert.
 
-    \item \textbf{Show Contour plot}  
+    \item \textbf{Show Contour plot:}  
         Erzeugt einen Konturplot, der die maximale Höhe der Rakete
         in Abhängigkeit von Düsendurchmesser und Wasserfüllstand zeigt.
         Dazu werden die aktuellen Eingabewerte verwendet.
@@ -300,10 +299,10 @@ Ungültige oder fehlende Eingaben verhindern den Start der Simulation.
 Unterhalb der Buttons befinden sich zwei automatisch gefüllte Felder:
 
 \begin{itemize}
-    \item \textbf{Impact velocity [m/s]}  
+    \item \textbf{Impact velocity [m/s]:}  
           Geschwindigkeit der Rakete beim Aufprall (Endgeschwindigkeit).
 
-    \item \textbf{Max height [m]}  
+    \item \textbf{Max height [m]:}  
           Erreichte maximale Höhe gegenüber dem Boden.
 \end{itemize}
 
