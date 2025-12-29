@@ -177,7 +177,7 @@ Bei unserer Simulation haben wir uns für ein Zeitintervall von \(\Delta t = 1\,
 
 Die Struktur des Programms basiert auf einer klar getrennten Architektur mit
 vier funktionalen Bereichen: \textbf{Controller}, \textbf{View}, 
-\textbf{Simulation} und \textbf{Physik/Modell}. 
+\textbf{Simulation} und \textbf{Physikalisches Modell}. 
 Der gesamte Datenfluss zwischen diesen Komponenten ist in Abbildung~\ref{fig:architektur} dargestellt.
 
 \begin{figure}[ht]
@@ -205,7 +205,7 @@ Die grafische Benutzeroberfläche besteht aus zwei Modulen:
           \texttt{window.py} übergeben wird.
 \end{itemize}
 
-\paragraph{Physik/Modell}
+\paragraph{Physikalisches Modell}
 Das Modul \texttt{physics/formulas.py} führt die physikalischen Berechnungen der
 Wasserrakete durch. Beim Start der Simulation werden die Eingabewerte des GUIs über
 \texttt{start(values)} übernommen. Die Funktion berechnet daraus die zeitdiskrete
