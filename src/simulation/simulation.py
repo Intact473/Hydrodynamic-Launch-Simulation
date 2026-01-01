@@ -21,11 +21,9 @@ class Simulation:
         self.time = 0.0  # simulation time in seconds
         self.results = []
 
-    def toggle_mode(self):
-        self.use_image_bg = not self.use_image_bg
-
     def place_rocket_bottom_center(self, margin_px):
-        """Place the rocket at the bottom center of the simulation area
+        """
+        Place the rocket at the bottom center of the simulation area
         :param margin_px: Margin from the bottom in pixels
         """
         pixel_to_meter = self.pixel_to_meter
@@ -43,7 +41,8 @@ class Simulation:
         self.rocket.pos = Vec2(pos_x_m, pos_y_m)
 
     def update(self, dt: float):
-        """Update the simulation state
+        """
+        Update the simulation state
         :param dt: Time delta in seconds since the last update
         """
         if self.rocket_is_flying:
@@ -112,7 +111,8 @@ class Simulation:
 
     
     def draw(self, screen: pg.Surface):
-        """Draw the entire simulation onto the given screen surface
+        """
+        Draw the entire simulation onto the given screen surface
         :param screen: The pygame surface representing the screen
         """
         sim_surface = screen.subsurface(self.rect)

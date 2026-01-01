@@ -22,7 +22,9 @@ clock = pg.time.Clock()
 sim = Simulation(simulation_window)
 
 def get_sim():
-    """Return the Simulation instance (or None if not created yet)."""
+    """
+    Return the Simulation instance (or None if not created yet).
+    """
     return sim
 
 def run_window(start=None):
@@ -54,8 +56,10 @@ def run_window(start=None):
             sim.start_pos_y = sim.rocket.pos.y  
 
     def handle_reset():
-        """Handle the reset button event from the control panel.
-        Sets the simulation and rocket to initial state."""
+        """
+        Handle the reset button event from the control panel.
+        Sets the simulation and rocket to initial state.
+        """
 
         sim.rocket_is_flying = False
         sim.rocket.pos = Vec2(0.0, 0.0)
@@ -72,6 +76,8 @@ def run_window(start=None):
         print("Error creating control panel:", e)
         return
     while running:
+        # Update simulation and GUI
+        
         # Handle events
         dt = clock.tick(60)  # sets framerate (fps)
         dt_ms = dt

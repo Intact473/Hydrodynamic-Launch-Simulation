@@ -35,7 +35,9 @@ class ControlPanel:
         cursor_y += label_h + gap
 
         def add_labeled_entry(label_text: str, default_text: str = ""):
-            """Helper function to add a labeled text entry field."""
+            """
+            Helper function to add a labeled text entry field.
+            """
             nonlocal cursor_y
 
             label =gui.elements.UILabel(
@@ -113,7 +115,9 @@ class ControlPanel:
 
 
     def handle_event(self, event):
-        """Handle button press events."""
+        """
+        Handle button press events.
+        """
         if event.ui_element == self.btn_start and self.on_start:
             values = self.read_values()
             if values is not None:
