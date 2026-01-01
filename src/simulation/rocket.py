@@ -4,10 +4,6 @@ import pygame as pg
 import math
 import physic.formulas as formulas
 
-"""
-This module provides the Rocket class for drawing and managing the rocket's appearance and geometry.
-"""
-
 Vec2 = pg.math.Vector2
 
 class Rocket:

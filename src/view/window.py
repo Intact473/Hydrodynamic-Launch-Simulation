@@ -8,11 +8,6 @@ import physic.formulas as formulas
 Vec2 = pg.math.Vector2
 import math
 
-"""
-This module provides the main application window and event loop for the Water Rocket Simulation.
-It manages the simulation area, GUI panel, and event handling.
-"""
-
 pg.init()
 
 # Create two separate windows in one

@@ -3,11 +3,6 @@ import math
 from pygame.math import Vector2 as Vec2
 from simulation.rocket import Rocket
 
-"""
-This module provides the Simulation class for managing the rocket flight simulation,
-including updating state and drawing the simulation area.
-"""
-
 class Simulation:
     """
     Manages the rocket flight simulation, including state updates and drawing.

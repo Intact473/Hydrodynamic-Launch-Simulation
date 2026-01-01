@@ -3,11 +3,6 @@ sys.dont_write_bytecode = True
 import pygame as pg
 import pygame_gui as gui
 
-"""
-This module provides the ControlPanel class for the Water Rocket Simulation GUI.
-It manages input fields, buttons, and output display for simulation parameters and results.
-"""
-
 class ControlPanel:
     """
     GUI control panel for simulation settings and actions.
