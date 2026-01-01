@@ -3,7 +3,6 @@ sys.dont_write_bytecode = True
 
 from view import window
 from physic import formulas
-from view import window
 
 
 if __name__ == "__main__":

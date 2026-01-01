@@ -25,11 +25,11 @@ class Rocket:
 
         # Farben
         self.color_of_bottle = (20, 180, 255)
-        self.color_of_outline = (48, 56, 70)
+        self.color_of_outline = (50, 50, 50)
         self.color_of_fin = (255, 0, 0)
-        self.color_of_nozzle = (100, 110, 128)
+        self.color_of_nozzle = (128, 128, 128)
         self.color_of_nose = (255, 0, 0)
-        self.color_of_tennis_ball = (255, 200, 0)
+        self.color_of_tennis_ball = (255, 255, 0)
 
     def create_tennis_ball(self):
         L = self.length_rocket
