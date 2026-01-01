@@ -3,9 +3,26 @@ sys.dont_write_bytecode = True
 import pygame as pg
 import pygame_gui as gui
 
+"""
+This module provides the ControlPanel class for the Water Rocket Simulation GUI.
+It manages input fields, buttons, and output display for simulation parameters and results.
+"""
 
 class ControlPanel:
+    """
+    GUI control panel for simulation settings and actions.
+    """
     def __init__(self, gui_rect: pg.Rect, manager: gui.UIManager, on_start=None, on_reset=None, on_contour_plot=None):
+        """
+        Initialize the control panel with input fields and buttons.
+
+        Args:
+            gui_rect (pg.Rect): Rectangle defining the panel area.
+            manager (gui.UIManager): The pygame_gui UI manager.
+            on_start (callable, optional): Callback for the Start button.
+            on_reset (callable, optional): Callback for the Reset button.
+            on_contour_plot (callable, optional): Callback for the Contour Plot button.
+        """
         self.gui_rect = gui_rect
         self.manager = manager
         self.on_start = on_start
@@ -37,6 +54,13 @@ class ControlPanel:
         def add_labeled_entry(label_text: str, default_text: str = ""):
             """
             Helper function to add a labeled text entry field.
+
+            Args:
+                label_text (str): The label for the input field.
+                default_text (str, optional): Default value for the input field.
+
+            Returns:
+                UITextEntryLine: The created input field.
             """
             nonlocal cursor_y
 
@@ -92,6 +116,15 @@ class ControlPanel:
         cursor_y += 40 + 8
 
         def add_output_field(label_text: str):
+            """
+            Helper function to add a labeled output field.
+
+            Args:
+                label_text (str): The label for the output field.
+
+            Returns:
+                UITextEntryLine: The created output field.
+            """
             nonlocal cursor_y
             label = gui.elements.UILabel(
                 relative_rect=pg.Rect(pad, cursor_y, 200, label_h),
@@ -116,7 +149,10 @@ class ControlPanel:
 
     def handle_event(self, event):
         """
-        Handle button press events.
+        Handle button press events from the control panel.
+
+        Args:
+            event: The pygame event to handle.
         """
         if event.ui_element == self.btn_start and self.on_start:
             values = self.read_values()
@@ -132,12 +168,9 @@ class ControlPanel:
     def read_values(self) -> dict:
         """
         Read and return the current values from the input fields as a dictionary.
-        Parameters:
-            volume: in liters
-            pressure: in bar
-            empty_rocket_weight: in kg
-            start_angle: in degrees
-            thrust_nozzle_diameter: in mm
+
+        Returns:
+            dict: Dictionary of input values for the simulation.
         """
         uinp_values = {}
         try:

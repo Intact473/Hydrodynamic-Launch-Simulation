@@ -8,6 +8,11 @@ import physic.formulas as formulas
 Vec2 = pg.math.Vector2
 import math
 
+"""
+This module provides the main application window and event loop for the Water Rocket Simulation.
+It manages the simulation area, GUI panel, and event handling.
+"""
+
 pg.init()
 
 # Create two separate windows in one
@@ -24,13 +29,19 @@ sim = Simulation(simulation_window)
 def get_sim():
     """
     Return the Simulation instance (or None if not created yet).
+
+    Returns:
+        Simulation: The current Simulation instance.
     """
     return sim
 
 def run_window(start=None):
     """
-    Main application loop.
-    start and stop are callback functions provided by main.py.
+    Main application loop for the Water Rocket Simulation.
+    Handles GUI events, simulation updates, and drawing.
+
+    Args:
+        start (callable): Callback function to start the simulation with input values.
     """
     running = True
     manager = gui.UIManager((WINDOW_W, WINDOW_H))
@@ -39,8 +50,11 @@ def run_window(start=None):
 
     # defined event handlers to pass into ControlPanel as callback functions
     def handle_start(values):
-        """Handle the start button event from the control panel.
-        :param values: Dictionary of input values from the control panel
+        """
+        Handle the start button event from the control panel.
+
+        Args:
+            values (dict): Dictionary of input values from the control panel.
         """
         sim.pixel_to_meter = 180.0
         sim.start_pos_y = sim.rocket.pos.y
@@ -69,6 +83,12 @@ def run_window(start=None):
         sim.camera_center = Vec2(sim.rocket.pos) - Vec2(0, 2.0)
 
     def handle_contour_plot(values):
+        """
+        Handle the contour plot button event from the control panel.
+
+        Args:
+            values (dict): Dictionary of input values from the control panel.
+        """
         formulas.show_contour_plot(values=values)
     try:
         panel = ControlPanel(gui_window, manager, on_start=handle_start, on_reset=handle_reset, on_contour_plot=handle_contour_plot)
@@ -76,6 +96,10 @@ def run_window(start=None):
         print("Error creating control panel:", e)
         return
     while running:
+        """
+        Main event loop for the application.
+        Handles events, updates simulation, and draws UI.
+        """
         # Update simulation and GUI
         
         # Handle events

@@ -3,8 +3,22 @@ import math
 from pygame.math import Vector2 as Vec2
 from simulation.rocket import Rocket
 
+"""
+This module provides the Simulation class for managing the rocket flight simulation,
+including updating state and drawing the simulation area.
+"""
+
 class Simulation:
+    """
+    Manages the rocket flight simulation, including state updates and drawing.
+    """
     def __init__(self, sim_rect: pg.Rect):
+        """
+        Initialize the Simulation.
+
+        Args:
+            sim_rect (pg.Rect): Rectangle defining the simulation area.
+        """
         self.rect = sim_rect
         self.pixel_to_meter = 180.0
         self.rocket = Rocket(
@@ -23,8 +37,10 @@ class Simulation:
 
     def place_rocket_bottom_center(self, margin_px):
         """
-        Place the rocket at the bottom center of the simulation area
-        :param margin_px: Margin from the bottom in pixels
+        Place the rocket at the bottom center of the simulation area.
+
+        Args:
+            margin_px (int): Margin from the bottom in pixels.
         """
         pixel_to_meter = self.pixel_to_meter
         nozzle_h_px = max(2, int(0.55 * self.rocket.nozzle_d * pixel_to_meter))
@@ -42,8 +58,10 @@ class Simulation:
 
     def update(self, dt: float):
         """
-        Update the simulation state
-        :param dt: Time delta in seconds since the last update
+        Update the simulation state.
+
+        Args:
+            dt (float): Time delta in seconds since the last update.
         """
         if self.rocket_is_flying:
             if int(self.time) >= len(self.results):
@@ -78,10 +96,12 @@ class Simulation:
         
     def draw_axes(self, surface: pg.Surface, meters_to_px: float, camera_center: Vec2):
         """
-        Draw horizontal axes lines on the simulation surface
-        :param surface: The pygame surface to draw on
-        :param meters_to_px: Conversion factor from meters to pixels
-        :param camera_center: The center of the camera in world coordinates
+        Draw horizontal axes lines on the simulation surface.
+
+        Args:
+            surface (pg.Surface): The pygame surface to draw on.
+            meters_to_px (float): Conversion factor from meters to pixels.
+            camera_center (Vec2): The center of the camera in world coordinates.
         """
         width, height = surface.get_size()
         center_x = width // 2
@@ -112,8 +132,10 @@ class Simulation:
     
     def draw(self, screen: pg.Surface):
         """
-        Draw the entire simulation onto the given screen surface
-        :param screen: The pygame surface representing the screen
+        Draw the entire simulation onto the given screen surface.
+
+        Args:
+            screen (pg.Surface): The pygame surface representing the screen.
         """
         sim_surface = screen.subsurface(self.rect)
         sim_surface.fill((0, 0, 0))

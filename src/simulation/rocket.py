@@ -4,16 +4,32 @@ import pygame as pg
 import math
 import physic.formulas as formulas
 
+"""
+This module provides the Rocket class for drawing and managing the rocket's appearance and geometry.
+"""
+
 Vec2 = pg.math.Vector2
 
 class Rocket:
-    
+    """
+    Represents the rocket and its geometry for drawing in the simulation.
+    """
     def __init__(self,
                  length_rocket: float = 3.0,
                  radius_of_rocket_cylinder: float = 0.22,
                  nozzle_d: float = formulas.gui_input_values.get("thrust_nozzle_diameter", 60) / 1000.0,
                  angle_deg: float = 90.0,
                  start_pos_rocket: Vec2 = Vec2(2.5, 1.2)):
+        """
+        Initialize the Rocket.
+
+        Args:
+            length_rocket (float): Length of the rocket [m].
+            radius_of_rocket_cylinder (float): Radius of the rocket body [m].
+            nozzle_d (float): Nozzle diameter [m].
+            angle_deg (float): Initial angle in degrees.
+            start_pos_rocket (Vec2): Initial position of the rocket.
+        """
         self.scale = 0.25
 
         self.length_rocket = float(length_rocket) * self.scale
@@ -32,12 +48,24 @@ class Rocket:
         self.color_of_tennis_ball = (255, 255, 0)
 
     def create_tennis_ball(self):
+        """
+        Create the tennis ball (nose tip) geometry.
+
+        Returns:
+            tuple: (center position as Vec2, radius as float)
+        """
         L = self.length_rocket
         x_center = L * (1 + 0.10 + 0.03)
         y_center = 0.0
         return Vec2(x_center, y_center), 0.03 * L
 
     def create_nose_module(self):
+        """
+        Create the nose module geometry.
+
+        Returns:
+            list: List of (x, y) tuples for the nose polygon.
+        """
         L = self.length_rocket
         R = self.radius_of_rocket_cylinder
         x_start = L
@@ -50,6 +78,12 @@ class Rocket:
         return nose_lower + nose_upper
 
     def create_bottle(self):
+        """
+        Create the bottle (main body) geometry.
+
+        Returns:
+            list: List of (x, y) tuples for the bottle polygon.
+        """
         L = self.length_rocket
         R = self.radius_of_rocket_cylinder
         end_neck = 0.0
@@ -74,6 +108,12 @@ class Rocket:
         return lower + upper
 
     def create_fins(self):
+        """
+        Create the rocket fins geometry.
+
+        Returns:
+            tuple: (bottom fin points, top fin points)
+        """
         L = self.length_rocket
         R = self.radius_of_rocket_cylinder
         end_neck = -0.0
@@ -98,9 +138,27 @@ class Rocket:
         return fin_bottom, fin_top
 
     def _center_nozzle(self):
+        """
+        Get the local coordinates of the nozzle center.
+
+        Returns:
+            Vec2: The local position of the nozzle center.
+        """
         return Vec2(0.0, 0.0)
 
     def _transform_points(self, pts, meters_to_px: float, camera_center: Vec2, surf: pg.Surface):
+        """
+        Transform rocket geometry points to screen coordinates.
+
+        Args:
+            pts (list): List of (x, y) tuples in local coordinates.
+            meters_to_px (float): Conversion factor from meters to pixels.
+            camera_center (Vec2): Camera center in world coordinates.
+            surf (pg.Surface): Surface for drawing.
+
+        Returns:
+            list: List of (x, y) tuples in screen coordinates.
+        """
         cos_angle, sin_angle = math.cos(self.angle), math.sin(self.angle)
         out = []
         for x, y in pts:
@@ -113,7 +171,15 @@ class Rocket:
 
     def draw(self, surf: pg.Surface, meters_to_px: float = 100.0,
              camera_center: Vec2 = Vec2(0, 0), outline: bool = True):
+        """
+        Draw the rocket on the given surface.
 
+        Args:
+            surf (pg.Surface): Surface to draw on.
+            meters_to_px (float, optional): Conversion factor from meters to pixels.
+            camera_center (Vec2, optional): Camera center in world coordinates.
+            outline (bool, optional): Whether to draw outlines.
+        """
         nose_pts_screen = self._transform_points(self.create_nose_module(), meters_to_px, camera_center, surf)
         pg.draw.polygon(surf, self.color_of_nose, nose_pts_screen)
         if outline:
