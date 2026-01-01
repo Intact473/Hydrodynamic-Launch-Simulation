@@ -32,12 +32,24 @@ class Rocket:
         self.color_of_tennis_ball = (255, 255, 0)
 
     def create_tennis_ball(self):
+        """
+        Create the tennis ball at the tip of the rocket nose.
+
+        Returns:
+            tuple: (Vec2, float) - Center position in local coordinates and radius [m]
+        """
         L = self.length_rocket
         x_center = L * (1 + 0.10 + 0.03)
         y_center = 0.0
         return Vec2(x_center, y_center), 0.03 * L
 
     def create_nose_module(self):
+        """
+        Create the nose cone polygon points in local coordinates.
+
+        Returns:
+            list: List of (x, y) tuples defining the nose cone polygon
+        """
         L = self.length_rocket
         R = self.radius_of_rocket_cylinder
         x_start = L
@@ -50,6 +62,12 @@ class Rocket:
         return nose_lower + nose_upper
 
     def create_bottle(self):
+        """
+        Create the rocket body/bottle polygon points with smooth transition from nozzle to body.
+
+        Returns:
+            list: List of (x, y) tuples defining the bottle polygon
+        """
         L = self.length_rocket
         R = self.radius_of_rocket_cylinder
         end_neck = 0.0
@@ -74,6 +92,12 @@ class Rocket:
         return lower + upper
 
     def create_fins(self):
+        """
+        Create the fin polygons (top and bottom) in local coordinates.
+
+        Returns:
+            tuple: (list, list) - Bottom fin polygon and top fin polygon points
+        """
         L = self.length_rocket
         R = self.radius_of_rocket_cylinder
         end_neck = -0.0
@@ -98,9 +122,27 @@ class Rocket:
         return fin_bottom, fin_top
 
     def _center_nozzle(self):
+        """
+        Get the local coordinates of the center of the nozzle.
+
+        Returns:
+            Vec2: Nozzle center position in local coordinates
+        """
         return Vec2(0.0, 0.0)
 
     def _transform_points(self, pts, meters_to_px: float, camera_center: Vec2, surf: pg.Surface):
+        """
+        Transform local rocket points to screen coordinates.
+
+        Args:
+            pts (list): List of local points (x, y) tuples
+            meters_to_px (float): Scale factor from meters to pixels
+            camera_center (Vec2): Center of the camera in world coordinates
+            surf (pg.Surface): The surface to draw on (for width/height)
+
+        Returns:
+            list: List of transformed points in screen coordinates
+        """
         cos_angle, sin_angle = math.cos(self.angle), math.sin(self.angle)
         out = []
         for x, y in pts:
@@ -113,6 +155,15 @@ class Rocket:
 
     def draw(self, surf: pg.Surface, meters_to_px: float = 100.0,
              camera_center: Vec2 = Vec2(0, 0), outline: bool = True):
+        """
+        Draw the complete rocket (nose, body, fins, nozzle) on the surface.
+
+        Args:
+            surf (pg.Surface): Pygame surface to draw on
+            meters_to_px (float): Scale factor from meters to pixels [default: 100.0]
+            camera_center (Vec2): Center of the camera in world coordinates [default: (0, 0)]
+            outline (bool): Whether to draw outlines [default: True]
+        """
 
         nose_pts_screen = self._transform_points(self.create_nose_module(), meters_to_px, camera_center, surf)
         pg.draw.polygon(surf, self.color_of_nose, nose_pts_screen)
