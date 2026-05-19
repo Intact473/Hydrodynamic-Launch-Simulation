@@ -1,8 +1,4 @@
-*.aux
-*.fdb_latexmk
-*.fls
-*.log
-*.out
-*.gz
-*.toc
-*.lof
+*
+!Wasserrakete.pdf
+!.gitignore
+!.Wasserrakete.tex
